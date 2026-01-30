@@ -1,5 +1,5 @@
-import 'package:nocturnal_onboarding/src/models/tutorial_page.dart';
-import 'package:nocturnal_onboarding/src/models/tutorial_section.dart';
+import 'package:nocturnal_flutter_tutorials/src/models/tutorial_page.dart';
+import 'package:nocturnal_flutter_tutorials/src/models/tutorial_section.dart';
 
 /// A single entry in the flat page list shown by [TutorialBook].
 ///

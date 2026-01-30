@@ -1,5 +1,5 @@
-import 'package:nocturnal_onboarding/src/models/section_type.dart';
-import 'package:nocturnal_onboarding/src/models/tutorial_page.dart';
+import 'package:nocturnal_flutter_tutorials/src/models/section_type.dart';
+import 'package:nocturnal_flutter_tutorials/src/models/tutorial_page.dart';
 
 class TutorialSection {
   final SectionType type;

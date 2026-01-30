@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nocturnal_onboarding/src/models/instruction_point.dart';
+import 'package:nocturnal_flutter_tutorials/src/models/instruction_point.dart';
 
 enum ContentType { text, textAndImage, video, portraitVideo, gif, mixed }
 

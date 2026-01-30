@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:nocturnal_onboarding/src/models/tutorial_page.dart';
-import 'package:nocturnal_onboarding/src/models/tutorial_section.dart';
-import 'package:nocturnal_onboarding/src/theme/tutorials_theme.dart';
-import 'package:nocturnal_onboarding/src/widgets/amoeba_background.dart';
-import 'package:nocturnal_onboarding/src/widgets/section_cover_page.dart';
-import 'package:nocturnal_onboarding/src/widgets/tutorial_page_widget.dart';
+import 'package:nocturnal_flutter_tutorials/src/models/tutorial_page.dart';
+import 'package:nocturnal_flutter_tutorials/src/models/tutorial_section.dart';
+import 'package:nocturnal_flutter_tutorials/src/theme/tutorials_theme.dart';
+import 'package:nocturnal_flutter_tutorials/src/widgets/amoeba_background.dart';
+import 'package:nocturnal_flutter_tutorials/src/widgets/section_cover_page.dart';
+import 'package:nocturnal_flutter_tutorials/src/widgets/tutorial_page_widget.dart';
 
 /// A fully configurable onboarding widget that encapsulates an optional welcome
 /// screen followed by a swipeable tutorial flow.

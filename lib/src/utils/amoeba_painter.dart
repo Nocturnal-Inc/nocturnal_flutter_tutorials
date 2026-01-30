@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:nocturnal_onboarding/src/theme/tutorials_theme.dart';
+import 'package:nocturnal_flutter_tutorials/src/theme/tutorials_theme.dart';
 
 class AmoebaPainter extends CustomPainter {
   final double animationValue;

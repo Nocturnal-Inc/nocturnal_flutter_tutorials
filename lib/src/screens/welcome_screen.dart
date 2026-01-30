@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:nocturnal_onboarding/src/models/section_type.dart';
-import 'package:nocturnal_onboarding/src/models/tutorial_content.dart';
-import 'package:nocturnal_onboarding/src/widgets/nocturnal_tutorial.dart';
+import 'package:nocturnal_flutter_tutorials/src/models/section_type.dart';
+import 'package:nocturnal_flutter_tutorials/src/models/tutorial_content.dart';
+import 'package:nocturnal_flutter_tutorials/src/widgets/nocturnal_tutorial.dart';
 
 class WelcomeScreen extends StatelessWidget {
   final VoidCallback? onComplete;

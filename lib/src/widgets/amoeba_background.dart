@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nocturnal_onboarding/src/theme/tutorials_theme.dart';
-import 'package:nocturnal_onboarding/src/utils/amoeba_painter.dart';
+import 'package:nocturnal_flutter_tutorials/src/theme/tutorials_theme.dart';
+import 'package:nocturnal_flutter_tutorials/src/utils/amoeba_painter.dart';
 
 class AmoebaBackground extends StatefulWidget {
   const AmoebaBackground({super.key});

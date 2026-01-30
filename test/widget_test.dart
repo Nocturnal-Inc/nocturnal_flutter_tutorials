@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nocturnal_onboarding/main.dart';
+import 'package:nocturnal_flutter_tutorials/main.dart';
 
 void main() {
   testWidgets('App renders welcome screen', (WidgetTester tester) async {

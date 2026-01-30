@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:nocturnal_onboarding/src/models/instruction_point.dart';
-import 'package:nocturnal_onboarding/src/models/section_type.dart';
-import 'package:nocturnal_onboarding/src/models/tutorial_page.dart';
-import 'package:nocturnal_onboarding/src/models/tutorial_section.dart';
+import 'package:nocturnal_flutter_tutorials/src/models/instruction_point.dart';
+import 'package:nocturnal_flutter_tutorials/src/models/section_type.dart';
+import 'package:nocturnal_flutter_tutorials/src/models/tutorial_page.dart';
+import 'package:nocturnal_flutter_tutorials/src/models/tutorial_section.dart';
 
 class TutorialContent {
   static const List<TutorialSection> sections = [

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
-import 'package:nocturnal_onboarding/src/theme/tutorials_theme.dart';
+import 'package:nocturnal_flutter_tutorials/src/theme/tutorials_theme.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
   final String videoUrl;

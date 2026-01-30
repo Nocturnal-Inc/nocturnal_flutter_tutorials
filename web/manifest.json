@@ -1,6 +1,6 @@
 {
-    "name": "nocturnal_onboarding",
-    "short_name": "nocturnal_onboarding",
+    "name": "nocturnal_flutter_tutorials",
+    "short_name": "nocturnal_flutter_tutorials",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

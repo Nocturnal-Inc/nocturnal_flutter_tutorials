@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:nocturnal_onboarding/src/models/tutorial_section.dart';
-import 'package:nocturnal_onboarding/src/theme/tutorials_theme.dart';
+import 'package:nocturnal_flutter_tutorials/src/models/tutorial_section.dart';
+import 'package:nocturnal_flutter_tutorials/src/theme/tutorials_theme.dart';
 
 /// A full-page widget that displays a section's title and subtitle.
 class SectionCoverPage extends StatelessWidget {

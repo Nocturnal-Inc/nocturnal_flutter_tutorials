@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nocturnal_onboarding/nocturnal_onboarding.dart';
+import 'package:nocturnal_flutter_tutorials/nocturnal_flutter_tutorials.dart';
 
 void main() {
   runApp(const NocturnalOnboardingApp());
