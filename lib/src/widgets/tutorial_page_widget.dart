@@ -6,8 +6,9 @@ import 'package:nocturnal_flutter_tutorials/src/widgets/video_player_widget.dart
 
 class TutorialPageWidget extends StatelessWidget {
   final TutorialPage page;
+  final String? packageName;
 
-  const TutorialPageWidget({super.key, required this.page});
+  const TutorialPageWidget({super.key, required this.page, this.packageName});
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +77,7 @@ class TutorialPageWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(TutorialsTheme.cardBorderRadius),
         child: Image.asset(
           page.imagePath!,
+          package: packageName,
           width: double.infinity,
           height: 240,
           fit: BoxFit.cover,
@@ -125,7 +127,10 @@ class TutorialPageWidget extends StatelessWidget {
         child: SizedBox(
           width: double.infinity,
           height: 240,
-          child: VideoPlayerWidget(videoUrl: page.videoUrl!),
+          child: VideoPlayerWidget(
+            videoUrl: page.videoUrl!,
+            packageName: packageName,
+          ),
         ),
       );
     }
@@ -142,6 +147,7 @@ class TutorialPageWidget extends StatelessWidget {
           child: VideoPlayerWidget(
             videoUrl: page.videoUrl!,
             aspectRatio: 9 / 16,
+            packageName: packageName,
           ),
         ),
       );
@@ -155,6 +161,7 @@ class TutorialPageWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(TutorialsTheme.cardBorderRadius),
         child: Image.asset(
           page.gifPath!,
+          package: packageName,
           width: double.infinity,
           height: 240,
           fit: BoxFit.cover,

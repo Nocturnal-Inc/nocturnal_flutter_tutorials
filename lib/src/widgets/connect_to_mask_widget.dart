@@ -30,6 +30,14 @@ class ConnectToMaskWidget extends StatelessWidget {
   /// Tapping it invokes [onSkip]. When null, no skip button is rendered.
   final String? skipLabel;
 
+  /// Optional package name used to resolve assets.
+  ///
+  /// When this library is consumed as a dependency, pass
+  /// `'nocturnal_flutter_tutorials'` so that Flutter looks for assets under
+  /// `packages/nocturnal_flutter_tutorials/`. When running standalone, leave
+  /// this `null`.
+  final String? packageName;
+
   const ConnectToMaskWidget({
     super.key,
     this.onComplete,
@@ -37,6 +45,7 @@ class ConnectToMaskWidget extends StatelessWidget {
     this.finishLabel = 'Finish',
     this.showStartupScreen = true,
     this.skipLabel,
+    this.packageName,
   });
 
   @override
@@ -52,6 +61,7 @@ class ConnectToMaskWidget extends StatelessWidget {
       headline: "Mask connection",
       subtitle: "Get started by connecting the mask",
       buttonLabel: "Next",
+      packageName: packageName,
     );
   }
 }

@@ -76,6 +76,16 @@ class NocturnalTutorial extends StatelessWidget {
   /// Called when the user taps the close/skip button.
   final VoidCallback? onSkip;
 
+  // ── Package ──
+
+  /// Optional package name used to resolve assets.
+  ///
+  /// When this library is consumed as a dependency, pass
+  /// `'nocturnal_flutter_tutorials'` so that Flutter looks for assets under
+  /// `packages/nocturnal_flutter_tutorials/`. When running standalone, leave
+  /// this `null` so assets resolve from the root `assets/` directory.
+  final String? packageName;
+
   const NocturnalTutorial({
     super.key,
     this.showWelcomeScreen = true,
@@ -93,6 +103,7 @@ class NocturnalTutorial extends StatelessWidget {
     this.finishLabel = 'Finish',
     this.onComplete,
     this.onSkip,
+    this.packageName,
   }) : assert(
          (sections != null) != (pages != null),
          'Provide exactly one of sections or pages.',
@@ -111,6 +122,7 @@ class NocturnalTutorial extends StatelessWidget {
         finishLabel: finishLabel,
         onComplete: onComplete,
         onSkip: onSkip,
+        packageName: packageName,
       );
     }
     return _NocturnalWelcomeScreen(
@@ -120,6 +132,7 @@ class NocturnalTutorial extends StatelessWidget {
       skipLabel: skipLabel,
       buttonLabel: buttonLabel,
       onSkip: onSkip,
+      packageName: packageName,
       destinationBuilder: (context) => _NocturnalTutorialScreen(
         sections: sections,
         pages: pages,
@@ -130,6 +143,7 @@ class NocturnalTutorial extends StatelessWidget {
         finishLabel: finishLabel,
         onComplete: onComplete,
         onSkip: onSkip,
+        packageName: packageName,
       ),
     );
   }
@@ -146,6 +160,7 @@ class _NocturnalWelcomeScreen extends StatelessWidget {
   final String? skipLabel;
   final String buttonLabel;
   final VoidCallback? onSkip;
+  final String? packageName;
   final Widget Function(BuildContext context) destinationBuilder;
 
   const _NocturnalWelcomeScreen({
@@ -156,6 +171,7 @@ class _NocturnalWelcomeScreen extends StatelessWidget {
     required this.buttonLabel,
     required this.onSkip,
     required this.destinationBuilder,
+    this.packageName,
   });
 
   @override
@@ -172,6 +188,7 @@ class _NocturnalWelcomeScreen extends StatelessWidget {
                 if (showLogo)
                   Image.asset(
                     'assets/logo/Nocturnal.png',
+                    package: packageName,
                     width: 200,
                     fit: BoxFit.contain,
                   )
@@ -287,6 +304,7 @@ class _NocturnalTutorialScreen extends StatefulWidget {
   final String finishLabel;
   final VoidCallback? onComplete;
   final VoidCallback? onSkip;
+  final String? packageName;
 
   const _NocturnalTutorialScreen({
     required this.sections,
@@ -298,6 +316,7 @@ class _NocturnalTutorialScreen extends StatefulWidget {
     required this.finishLabel,
     required this.onComplete,
     required this.onSkip,
+    this.packageName,
   });
 
   @override
@@ -394,7 +413,10 @@ class _NocturnalTutorialScreenState extends State<_NocturnalTutorialScreen> {
                       _SectionCoverEntry(:final section) =>
                         SectionCoverPage(section: section),
                       _ContentPageEntry(:final page) =>
-                        TutorialPageWidget(page: page),
+                        TutorialPageWidget(
+                          page: page,
+                          packageName: widget.packageName,
+                        ),
                     };
                   },
                 ),

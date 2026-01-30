@@ -45,6 +45,14 @@ class NocturnalOnboardingWidget extends StatelessWidget {
   /// Subtitle text shown below the logo or headline on the welcome screen.
   final String subtitle;
 
+  /// Optional package name used to resolve assets.
+  ///
+  /// When this library is consumed as a dependency, pass
+  /// `'nocturnal_flutter_tutorials'` so that Flutter looks for assets under
+  /// `packages/nocturnal_flutter_tutorials/`. When running standalone, leave
+  /// this `null`.
+  final String? packageName;
+
   const NocturnalOnboardingWidget({
     super.key,
     this.onComplete,
@@ -56,6 +64,7 @@ class NocturnalOnboardingWidget extends StatelessWidget {
     this.showLogo = true,
     this.headline,
     this.subtitle = 'Better sleep starts here',
+    this.packageName,
   });
 
   @override
@@ -74,6 +83,7 @@ class NocturnalOnboardingWidget extends StatelessWidget {
       showRestartButton: false,
       enableDragToScrub: true,
       showSectionLabel: true,
+      packageName: packageName,
     );
   }
 }

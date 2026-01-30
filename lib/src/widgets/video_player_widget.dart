@@ -8,6 +8,7 @@ class VideoPlayerWidget extends StatefulWidget {
   final bool autoPlay;
   final bool looping;
   final double aspectRatio;
+  final String? packageName;
 
   const VideoPlayerWidget({
     super.key,
@@ -15,6 +16,7 @@ class VideoPlayerWidget extends StatefulWidget {
     this.autoPlay = true,
     this.looping = true,
     this.aspectRatio = 16 / 9,
+    this.packageName,
   });
 
   @override
@@ -33,9 +35,10 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   }
 
   Future<void> _initializePlayer() async {
-    _videoPlayerController = VideoPlayerController.asset(
-      widget.videoUrl,
-    );
+    final path = widget.packageName != null
+        ? 'packages/${widget.packageName}/${widget.videoUrl}'
+        : widget.videoUrl;
+    _videoPlayerController = VideoPlayerController.asset(path);
 
     try {
       await _videoPlayerController.initialize();
