@@ -14,4 +14,5 @@ export 'package:nocturnal_onboarding/src/models/tutorial_section.dart';
 export 'package:nocturnal_onboarding/src/models/tutorial_content.dart';
 export 'package:nocturnal_onboarding/src/theme/tutorials_theme.dart';
 export 'package:nocturnal_onboarding/src/widgets/connect_to_mask_widget.dart';
+export 'package:nocturnal_onboarding/src/widgets/experience_optimization_widget.dart';
 export 'package:nocturnal_onboarding/src/widgets/nocturnal_tutorial.dart';

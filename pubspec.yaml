@@ -64,6 +64,7 @@ flutter:
     - assets/images/
     - assets/images/onboarding/
     - assets/gifs/
+    - assets/gifs/onboarding/
     - assets/videos/
     - assets/videos/onboarding/
 

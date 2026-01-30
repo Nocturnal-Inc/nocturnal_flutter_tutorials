@@ -29,11 +29,20 @@ class NocturnalOnboardingApp extends StatelessWidget {
       //   skipLabel: 'Skip',
       //   onSkip: () => debugPrint('Onboarding skipped!'),
       // ),
-      home: ConnectToMaskWidget(
+      // home: ConnectToMaskWidget(
+      //   onComplete: () {
+      //     debugPrint('Connection tutorial complete!');
+      //   },
+      //   onSkip: () => debugPrint('Connection tutorial skipped!'),
+      //   finishLabel: "Next",
+      // ),
+      home: ExperienceOptimizationWidget(
         onComplete: () {
-          debugPrint('Connection tutorial complete!');
+          debugPrint('Experience optimazation complete!');
         },
-        onSkip: () => debugPrint('Connection tutorial skipped!'),
+        onSkip: () {
+          debugPrint('Experience optimization skipped!');
+        },
         finishLabel: "Next",
       ),
     );

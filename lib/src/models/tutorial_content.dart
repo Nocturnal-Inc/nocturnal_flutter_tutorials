@@ -184,6 +184,59 @@ class TutorialContent {
     return sections.where((s) => !disabled.contains(s.type)).toList();
   }
 
+  /// Pages for the experience-optimization tutorial flow.
+  static const List<TutorialPage> experienceOptimizationPages = [
+    TutorialPage(
+      title: 'Initial setup',
+      contentType: ContentType.gif,
+      gifPath: 'assets/gifs/onboarding/calibration.gif',
+      instructionPoints: [
+        InstructionPoint(
+          headline: 'Stimulation profiles',
+          description:
+              'We will find your optimal setting for vestibular stimulation',
+        ),
+        InstructionPoint(
+          headline: 'Preperation',
+          description:
+              'Make sure your skin behind ears is clean, dry and free of hair and jewelry',
+        ),
+      ],
+    ),
+    TutorialPage(
+      title: 'Device fitting',
+      contentType: ContentType.portraitVideo,
+      videoUrl: 'assets/videos/onboarding/earloop_placement.mp4',
+      instructionPoints: [
+        InstructionPoint(
+          headline: 'Earloops',
+          description: 'Move earloops around each ear',
+        ),
+        InstructionPoint(
+          headline: 'Headstrap',
+          description: 'Fasten headstrap around the back of the head',
+        ),
+      ],
+    ),
+    TutorialPage(
+      title: 'Final step',
+      contentType: ContentType.textAndImage,
+      imagePath: 'assets/images/onboarding/mastoid.png',
+      instructionPoints: [
+        InstructionPoint(
+          headline: 'Mastoid Contact',
+          description:
+              'Wear the mask and make sure the electrodes align with the mastoid as shown',
+        ),
+        InstructionPoint(
+          headline: 'Confirmation',
+          description:
+              'Press back of earloop into skin to confirm hydrogels are touching skin',
+        ),
+      ],
+    ),
+  ];
+
   /// Pages for the mask-connection tutorial flow.
   static const List<TutorialPage> connectToMaskPages = [
     TutorialPage(

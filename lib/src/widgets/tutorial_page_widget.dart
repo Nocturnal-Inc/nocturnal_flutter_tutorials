@@ -15,29 +15,9 @@ class TutorialPageWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(
             horizontal: TutorialsTheme.pagePadding,
           ),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    page.title,
-                    style: TutorialsTheme.headingStyle,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                _buildMediaArea(),
-                if (page.instructionPoints.isNotEmpty) ...[
-                  const SizedBox(height: 24),
-                  _buildInstructionPoints(),
-                ],
-                const SizedBox(height: 40),
-              ],
-            ),
-          ),
+          child: page.isScrollable
+              ? SingleChildScrollView(child: _buildContent())
+              : _buildContent(),
         )
         .animate()
         .fadeIn(duration: TutorialsTheme.entryAnimationDuration)
@@ -49,6 +29,30 @@ class TutorialPageWidget extends StatelessWidget {
         );
   }
 
+  Widget _buildContent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        SizedBox(
+          width: double.infinity,
+          child: Text(
+            page.title,
+            style: TutorialsTheme.headingStyle,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        const SizedBox(height: 24),
+        _buildMediaArea(),
+        if (page.instructionPoints.isNotEmpty) ...[
+          const SizedBox(height: 24),
+          _buildInstructionPoints(),
+        ],
+        const SizedBox(height: 40),
+      ],
+    );
+  }
+
   Widget _buildMediaArea() {
     switch (page.contentType) {
       case ContentType.text:
@@ -57,6 +61,8 @@ class TutorialPageWidget extends StatelessWidget {
         return _buildImageOrPlaceholder();
       case ContentType.video:
         return _buildVideoArea();
+      case ContentType.portraitVideo:
+        return _buildPortraitVideoArea();
       case ContentType.gif:
         return _buildGifArea();
       case ContentType.mixed:
@@ -120,6 +126,23 @@ class TutorialPageWidget extends StatelessWidget {
           width: double.infinity,
           height: 240,
           child: VideoPlayerWidget(videoUrl: page.videoUrl!),
+        ),
+      );
+    }
+    return _buildPlaceholder();
+  }
+
+  Widget _buildPortraitVideoArea() {
+    if (page.videoUrl != null) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(TutorialsTheme.cardBorderRadius),
+        child: SizedBox(
+          width: double.infinity,
+          height: 300,
+          child: VideoPlayerWidget(
+            videoUrl: page.videoUrl!,
+            aspectRatio: 9 / 16,
+          ),
         ),
       );
     }

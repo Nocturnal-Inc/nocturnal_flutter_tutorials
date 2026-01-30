@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nocturnal_onboarding/src/models/instruction_point.dart';
 
-enum ContentType { text, textAndImage, video, gif, mixed }
+enum ContentType { text, textAndImage, video, portraitVideo, gif, mixed }
 
 class TutorialPage {
   final String title;
@@ -11,6 +11,7 @@ class TutorialPage {
   final String? videoUrl;
   final String? gifPath;
   final IconData? placeholderIcon;
+  final bool isScrollable;
 
   const TutorialPage({
     required this.title,
@@ -20,5 +21,6 @@ class TutorialPage {
     this.videoUrl,
     this.gifPath,
     this.placeholderIcon,
+    this.isScrollable = false,
   });
 }
