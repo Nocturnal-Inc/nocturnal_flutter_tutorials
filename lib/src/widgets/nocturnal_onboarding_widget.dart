@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nocturnal_onboarding/src/models/section_type.dart';
-import 'package:nocturnal_onboarding/src/screens/welcome_screen.dart';
-import 'package:nocturnal_onboarding/src/screens/tutorial_book.dart';
+import 'package:nocturnal_onboarding/src/models/tutorial_content.dart';
+import 'package:nocturnal_onboarding/src/widgets/nocturnal_tutorial.dart';
 
 /// Public entry-point widget for the Nocturnal onboarding flow.
 ///
@@ -60,23 +60,20 @@ class NocturnalOnboardingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!showWelcomeScreen) {
-      return TutorialBook(
-        onComplete: onComplete,
-        onSkip: onSkip,
-        disabledSections: disabledSections,
-        finishLabel: finishLabel,
-      );
-    }
-    return WelcomeScreen(
-      onComplete: onComplete,
-      disabledSections: disabledSections,
-      skipLabel: skipLabel,
-      onSkip: onSkip,
-      finishLabel: finishLabel,
+    return NocturnalTutorial(
+      showWelcomeScreen: showWelcomeScreen,
       showLogo: showLogo,
       headline: headline,
-      subtitle: subtitle,
+      subtitle: "",
+      skipLabel: skipLabel,
+      onComplete: onComplete,
+      onSkip: onSkip,
+      finishLabel: finishLabel,
+      sections: TutorialContent.filteredSections(disabledSections),
+      showPageNumber: false,
+      showRestartButton: false,
+      enableDragToScrub: true,
+      showSectionLabel: true,
     );
   }
 }

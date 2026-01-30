@@ -21,20 +21,21 @@ class NocturnalOnboardingApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: TutorialsTheme.backgroundColor,
       ),
-      home: NocturnalOnboardingWidget(
-        onComplete: () {
-          debugPrint('Onboarding complete!');
-        },
-        disabledSections: const {},
-        skipLabel: 'Skip',
-        onSkip: () => debugPrint('Onboarding skipped!'),
-      ),
-      // home: ConnectToMaskWidget(
+      // home: NocturnalOnboardingWidget(
       //   onComplete: () {
-      //     debugPrint('Connection tutorial complete!');
+      //     debugPrint('Onboarding complete!');
       //   },
-      //   onSkip: () => debugPrint('Connection tutorial skipped!'),
+      //   disabledSections: const {},
+      //   skipLabel: 'Skip',
+      //   onSkip: () => debugPrint('Onboarding skipped!'),
       // ),
+      home: ConnectToMaskWidget(
+        onComplete: () {
+          debugPrint('Connection tutorial complete!');
+        },
+        onSkip: () => debugPrint('Connection tutorial skipped!'),
+        finishLabel: "Next",
+      ),
     );
   }
 }

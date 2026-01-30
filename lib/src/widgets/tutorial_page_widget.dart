@@ -30,12 +30,9 @@ class TutorialPageWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 _buildMediaArea(),
-                const SizedBox(height: 24),
-                Text(page.description, style: TutorialsTheme.bodyStyle),
-                if (page.bulletPoints != null &&
-                    page.bulletPoints!.isNotEmpty) ...[
-                  const SizedBox(height: 20),
-                  _buildBulletPoints(),
+                if (page.instructionPoints.isNotEmpty) ...[
+                  const SizedBox(height: 24),
+                  _buildInstructionPoints(),
                 ],
                 const SizedBox(height: 40),
               ],
@@ -157,29 +154,31 @@ class TutorialPageWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildBulletPoints() {
+  Widget _buildInstructionPoints() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: page.bulletPoints!.map((point) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(top: 4),
-                child: Icon(
-                  Icons.check_circle_outline,
-                  size: 18,
-                  color: TutorialsTheme.textSecondary,
+      children: [
+        for (int i = 0; i < page.instructionPoints.length; i++) ...[
+          if (i > 0) const SizedBox(height: 28),
+          SizedBox(
+            width: double.infinity,
+            child: Column(
+              children: [
+                Text(
+                  page.instructionPoints[i].headline,
+                  style: TutorialsTheme.instructionHeadlineStyle,
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(child: Text(point, style: TutorialsTheme.bulletStyle)),
-            ],
+                const SizedBox(height: 4),
+                Text(
+                  page.instructionPoints[i].description,
+                  style: TutorialsTheme.instructionDescriptionStyle,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
-        );
-      }).toList(),
+        ],
+      ],
     );
   }
 }

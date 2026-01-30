@@ -155,7 +155,15 @@ class TutorialsTheme {
     color: buttonTextColor,
   );
 
-  static const TextStyle bulletStyle = TextStyle(
+  static const TextStyle instructionHeadlineStyle = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: textPrimary,
+    height: 1.4,
+  );
+
+  static const TextStyle instructionDescriptionStyle = TextStyle(
     fontFamily: fontFamily,
     fontSize: 14,
     fontWeight: FontWeight.normal,

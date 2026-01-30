@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nocturnal_onboarding/src/models/instruction_point.dart';
 import 'package:nocturnal_onboarding/src/models/section_type.dart';
 import 'package:nocturnal_onboarding/src/models/tutorial_page.dart';
 import 'package:nocturnal_onboarding/src/models/tutorial_section.dart';
@@ -12,34 +13,59 @@ class TutorialContent {
       pages: [
         TutorialPage(
           title: 'Plugging In Your Device',
-          description:
-              'Connect the USB-C cable to the charging port on the top of your E pad.',
           contentType: ContentType.video,
           videoUrl: 'assets/videos/onboarding/plugging_in.mp4',
-          bulletPoints: [
-            'Use a USB-C cable',
-            'Full charge takes approximately 2 hours',
+          instructionPoints: [
+            InstructionPoint(
+              headline: 'Cable',
+              description:
+                  'Connect USB-C at top of E-pad.  Full charge ~2 hours.',
+            ),
+            InstructionPoint(
+              headline: 'Charge time',
+              description: 'Full charge takes approximately 2 hours.',
+            ),
           ],
         ),
         TutorialPage(
           title: 'Charging status',
-          description:
-              'When the mask is being charged. You should notice green LEDs at the bottom of the E-pad light up green.',
           contentType: ContentType.video,
           videoUrl: 'assets/videos/onboarding/charging_light.mp4',
-          bulletPoints: ['Green LEDs on both sides of E-pad'],
+          instructionPoints: [
+            InstructionPoint(
+              headline: 'Charging indicator',
+              description: 'Green LEDs light up at the bottom of the E-pad.',
+            ),
+          ],
         ),
         TutorialPage(
-          title: 'Power button',
-          description:
-              'You can find the power button next to the USB-C socket at the top of the E-pad.',
+          title: 'Turn on the mask',
           contentType: ContentType.video,
           videoUrl: 'assets/videos/onboarding/power_button.mp4',
-          bulletPoints: [
-            'Press once to turn on the mask. You will see the mask initialize in 10s',
-            'During initialization you would see the LEDs go off as shown',
-            'Also, device vibrates on successful initialization',
-            'To turn off the device, press and hold the button for 5s',
+          instructionPoints: [
+            InstructionPoint(
+              headline: 'Press once to power on',
+              description: 'Powers on in ~10 seconds',
+            ),
+            InstructionPoint(
+              headline: 'Correct power on',
+              description: 'LEDs flash on facepad and mask vibrates',
+            ),
+          ],
+        ),
+        TutorialPage(
+          title: 'Turn off the mask',
+          contentType: ContentType.video,
+          videoUrl: 'assets/videos/onboarding/poweroff.mp4',
+          instructionPoints: [
+            InstructionPoint(
+              headline: 'Hold button to power off',
+              description: 'Powers off in ~5 seconds',
+            ),
+            InstructionPoint(
+              headline: 'Correct power off',
+              description: 'Home screen indicates mask disconnection',
+            ),
           ],
         ),
       ],
@@ -52,11 +78,18 @@ class TutorialContent {
       pages: [
         TutorialPage(
           title: 'Attaching & Detaching the Face pad',
-          description:
-              'Align the velcro part of the face pad with the e-pad. Such that the cut outs align perfectly.',
           contentType: ContentType.video,
           videoUrl: 'assets/videos/onboarding/facepad_attach_detach.mp4',
-          bulletPoints: ['Pull from any edge to detach'],
+          instructionPoints: [
+            InstructionPoint(
+              headline: 'Attach Face Pad',
+              description: 'Align Velcro with cutouts',
+            ),
+            InstructionPoint(
+              headline: 'Remove Face Pad',
+              description: 'Pull from any edge to remove',
+            ),
+          ],
         ),
       ],
     ),
@@ -68,15 +101,35 @@ class TutorialContent {
       pages: [
         TutorialPage(
           title: 'Connecting the Earloops',
-          description:
-              'Earloops have magnetic connector on one end and velcro strap on the other.',
           contentType: ContentType.video,
           videoUrl: 'assets/videos/onboarding/earloop_connector.mp4',
           placeholderIcon: Icons.hearing,
-          bulletPoints: [
-            'Notice click sound when the magnetic connector is connected.',
-            'Velcro is adjustable',
-            'Secure with gentle tug',
+          instructionPoints: [
+            InstructionPoint(
+              headline: 'Connector',
+              description: 'Magnetic end clicks into place',
+            ),
+            InstructionPoint(
+              headline: 'Earloop',
+              description:
+                  'Front Velcro adjusts earloop position secure with a gentle tug',
+            ),
+          ],
+        ),
+        TutorialPage(
+          title: 'Headstrap',
+          contentType: ContentType.video,
+          videoUrl: 'assets/videos/onboarding/headstrap.mp4',
+          placeholderIcon: Icons.hearing,
+          instructionPoints: [
+            InstructionPoint(
+              headline: 'Fabric',
+              description: 'Wraps around your head to secure the mask',
+            ),
+            InstructionPoint(
+              headline: 'Adjustment',
+              description: 'Adjust Velcro for a comfortable fit',
+            ),
           ],
         ),
       ],
@@ -89,22 +142,34 @@ class TutorialContent {
       pages: [
         TutorialPage(
           title: 'Unpacking the Hydrogels',
-          description:
-              'Take the electrodes out of the plastic bag. Place them in the cavities on the earloop and lock them in place.',
           contentType: ContentType.video,
           videoUrl: 'assets/videos/onboarding/hydrogels_bag.mp4',
-          bulletPoints: [
-            'Pair of electrodes goes on each earloop',
-            'Make sure it gets locked in place as it is placed',
+          instructionPoints: [
+            InstructionPoint(
+              headline: 'Finding hydrogels',
+              description: 'Remove hydrogels from the green bag',
+            ),
+            InstructionPoint(
+              headline: 'Installing the hydrogels ',
+              description:
+                  'Press into each ear-loop hole until secure (4 total). (Tip: insert at a slight angle, then press around the edge)',
+            ),
           ],
         ),
         TutorialPage(
-          title: 'Hydrogel Refreshment',
-          description:
-              'After each use, remove the hydrogels and place it in the contact lens case.',
+          title: 'Hydrogel Maintenance',
           contentType: ContentType.video,
           videoUrl: 'assets/videos/onboarding/hydrogels_case.mp4',
-          // bulletPoints: ['Replace every 2-4 weeks'],
+          instructionPoints: [
+            InstructionPoint(
+              headline: 'Remove Hydrogels',
+              description: 'Remove hydrogels the earloops',
+            ),
+            InstructionPoint(
+              headline: 'Maintenance',
+              description: 'Add a few drops of the solution to rehydrate',
+            ),
+          ],
         ),
       ],
     ),
@@ -118,4 +183,23 @@ class TutorialContent {
     if (disabled.isEmpty) return sections;
     return sections.where((s) => !disabled.contains(s.type)).toList();
   }
+
+  /// Pages for the mask-connection tutorial flow.
+  static const List<TutorialPage> connectToMaskPages = [
+    TutorialPage(
+      title: 'Connection instructions',
+      contentType: ContentType.textAndImage,
+      imagePath: 'assets/images/onboarding/qr_code.png',
+      instructionPoints: [
+        InstructionPoint(
+          headline: 'QR code',
+          description: 'Find QR code included with the device',
+        ),
+        InstructionPoint(
+          headline: 'Connection',
+          description: 'Next screen: scan the QR code when the camera opens',
+        ),
+      ],
+    ),
+  ];
 }

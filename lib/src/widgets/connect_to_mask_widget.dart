@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nocturnal_onboarding/src/screens/connect_to_mask_screen.dart';
-import 'package:nocturnal_onboarding/src/screens/connect_to_mask_welcome_screen.dart';
+import 'package:nocturnal_onboarding/src/models/tutorial_content.dart';
+import 'package:nocturnal_onboarding/src/widgets/nocturnal_tutorial.dart';
 
 /// Public entry-point widget for the Nocturnal mask connection flow.
 ///
@@ -41,18 +41,17 @@ class ConnectToMaskWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!showStartupScreen) {
-      return ConnectToMaskScreen(
-        onComplete: onComplete,
-        onSkip: onSkip,
-        finishLabel: finishLabel,
-      );
-    }
-    return ConnectToMaskWelcomeScreen(
+    return NocturnalTutorial(
+      showWelcomeScreen: showStartupScreen,
+      skipLabel: skipLabel,
       onComplete: onComplete,
       onSkip: onSkip,
       finishLabel: finishLabel,
-      skipLabel: skipLabel,
+      pages: TutorialContent.connectToMaskPages,
+      showLogo: false,
+      headline: "Mask connection",
+      subtitle: "Get started by connecting the mask",
+      buttonLabel: "Next",
     );
   }
 }

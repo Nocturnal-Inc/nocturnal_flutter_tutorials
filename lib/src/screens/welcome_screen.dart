@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:nocturnal_onboarding/src/models/section_type.dart';
-import 'package:nocturnal_onboarding/src/screens/tutorial_book.dart';
-import 'package:nocturnal_onboarding/src/theme/tutorials_theme.dart';
-import 'package:nocturnal_onboarding/src/widgets/amoeba_background.dart';
+import 'package:nocturnal_onboarding/src/models/tutorial_content.dart';
+import 'package:nocturnal_onboarding/src/widgets/nocturnal_tutorial.dart';
 
 class WelcomeScreen extends StatelessWidget {
   final VoidCallback? onComplete;
@@ -36,103 +34,18 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          const AmoebaBackground(),
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (showLogo)
-                  Image.asset(
-                    'assets/logo/Nocturnal.png',
-                    width: 200,
-                    fit: BoxFit.contain,
-                  )
-                else
-                  Text(
-                    headline ?? '',
-                    style: TutorialsTheme.headingStyle,
-                    textAlign: TextAlign.center,
-                  ),
-                const SizedBox(height: 24),
-                Text(
-                  subtitle,
-                  style: TutorialsTheme.subheadingStyle.copyWith(
-                    color: TutorialsTheme.textSecondary.withValues(alpha: 0.8),
-                  ),
-                ),
-                const SizedBox(height: 60),
-                SizedBox(
-                  width: 220,
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => TutorialBook(
-                            onComplete: onComplete,
-                            onSkip: onSkip,
-                            disabledSections: disabledSections,
-                            finishLabel: finishLabel,
-                          ),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: TutorialsTheme.buttonColor,
-                      foregroundColor: TutorialsTheme.buttonTextColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          TutorialsTheme.buttonBorderRadius,
-                        ),
-                      ),
-                      elevation: 4,
-                    ),
-                    child: const Text(
-                      'Get Started',
-                      style: TutorialsTheme.buttonTextStyle,
-                    ),
-                  ),
-                )
-                    .animate()
-                    .fadeIn(
-                      delay: const Duration(milliseconds: 600),
-                      duration: const Duration(milliseconds: 800),
-                    )
-                    .slideY(
-                      begin: 0.3,
-                      end: 0,
-                      delay: const Duration(milliseconds: 600),
-                      duration: const Duration(milliseconds: 800),
-                      curve: Curves.easeOut,
-                    ),
-                if (skipLabel != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: TextButton(
-                      onPressed: onSkip,
-                      child: Text(
-                        skipLabel!,
-                        style: TutorialsTheme.subheadingStyle.copyWith(
-                          color: TutorialsTheme.textSecondary,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  )
-                      .animate()
-                      .fadeIn(
-                        delay: const Duration(milliseconds: 900),
-                        duration: const Duration(milliseconds: 800),
-                      ),
-              ],
-            ),
-          ),
-        ],
-      ),
+    return NocturnalTutorial(
+      showWelcomeScreen: true,
+      showLogo: showLogo,
+      headline: headline,
+      subtitle: subtitle,
+      skipLabel: skipLabel,
+      onComplete: onComplete,
+      onSkip: onSkip,
+      finishLabel: finishLabel,
+      sections: TutorialContent.filteredSections(disabledSections),
+      enableDragToScrub: true,
+      showSectionLabel: true,
     );
   }
 }
