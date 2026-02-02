@@ -10,7 +10,6 @@ export 'package:nocturnal_flutter_tutorials/src/screens/welcome_screen.dart';
 export 'package:nocturnal_flutter_tutorials/src/screens/tutorial_book.dart';
 export 'package:nocturnal_flutter_tutorials/src/models/tutorial_page.dart';
 export 'package:nocturnal_flutter_tutorials/src/models/instruction_point.dart';
-export 'package:nocturnal_flutter_tutorials/src/models/tutorial_section.dart';
 export 'package:nocturnal_flutter_tutorials/src/models/tutorial_content.dart';
 export 'package:nocturnal_flutter_tutorials/src/theme/tutorials_theme.dart';
 export 'package:nocturnal_flutter_tutorials/src/widgets/connect_to_mask_widget.dart';

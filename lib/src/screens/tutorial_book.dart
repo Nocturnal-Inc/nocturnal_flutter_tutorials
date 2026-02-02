@@ -7,7 +7,6 @@ class TutorialBook extends StatelessWidget {
   final VoidCallback? onComplete;
   final VoidCallback? onSkip;
   final Set<SectionType> disabledSections;
-  final bool showPageNumber;
   final bool showRestartButton;
   final String finishLabel;
 
@@ -16,7 +15,6 @@ class TutorialBook extends StatelessWidget {
     this.onComplete,
     this.onSkip,
     this.disabledSections = const {},
-    this.showPageNumber = false,
     this.showRestartButton = false,
     this.finishLabel = 'Finish',
   });
@@ -28,8 +26,7 @@ class TutorialBook extends StatelessWidget {
       onComplete: onComplete,
       onSkip: onSkip,
       finishLabel: finishLabel,
-      sections: TutorialContent.filteredSections(disabledSections),
-      showPageNumber: showPageNumber,
+      pages: TutorialContent.filteredSections(disabledSections),
       showRestartButton: showRestartButton,
       enableDragToScrub: true,
       showSectionLabel: true,

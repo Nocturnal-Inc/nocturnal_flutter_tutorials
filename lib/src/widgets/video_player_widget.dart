@@ -111,6 +111,21 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       );
     }
 
-    return Chewie(controller: _chewieController!);
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        Chewie(controller: _chewieController!),
+        VideoProgressIndicator(
+          _videoPlayerController,
+          allowScrubbing: false,
+          padding: EdgeInsets.zero,
+          colors: VideoProgressColors(
+            playedColor: Colors.white.withValues(alpha: 0.8),
+            bufferedColor: Colors.white.withValues(alpha: 0.3),
+            backgroundColor: Colors.white.withValues(alpha: 0.2),
+          ),
+        ),
+      ],
+    );
   }
 }

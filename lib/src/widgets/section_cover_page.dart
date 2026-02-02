@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:nocturnal_flutter_tutorials/src/models/tutorial_section.dart';
+import 'package:nocturnal_flutter_tutorials/src/models/tutorial_page.dart';
 import 'package:nocturnal_flutter_tutorials/src/theme/tutorials_theme.dart';
 
 /// A full-page widget that displays a section's title and subtitle.
 class SectionCoverPage extends StatelessWidget {
-  final TutorialSection section;
+  final GroupPage group;
+  final String? packageName;
 
-  const SectionCoverPage({super.key, required this.section});
+  const SectionCoverPage({super.key, required this.group, this.packageName});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class SectionCoverPage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              section.sectionTitle.toUpperCase(),
+              group.title.toUpperCase(),
               textAlign: TextAlign.center,
               style: TutorialsTheme.sectionTitleStyle.copyWith(
                 fontSize: 28,
@@ -29,10 +30,25 @@ class SectionCoverPage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              section.sectionSubtitle,
+              group.subtitle,
               textAlign: TextAlign.center,
               style: TutorialsTheme.subheadingStyle,
             ),
+            if (group.imagePath != null) ...[
+              const SizedBox(height: 24),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(
+                  TutorialsTheme.cardBorderRadius,
+                ),
+                child: Image.asset(
+                  group.imagePath!,
+                  package: packageName,
+                  height: 240,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ],
           ],
         ),
       ),

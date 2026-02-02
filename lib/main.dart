@@ -85,7 +85,7 @@ class _TutorialLauncherPage extends StatelessWidget {
                     onComplete: () => Navigator.of(context).pop(),
                     onSkip: () => Navigator.of(context).pop(),
                     skipLabel: 'Skip',
-                    finishLabel: 'Next',
+                    finishLabel: 'Start',
                   ),
                 ),
               ),

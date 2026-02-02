@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:nocturnal_flutter_tutorials/src/models/tutorial_page.dart';
-import 'package:nocturnal_flutter_tutorials/src/models/tutorial_section.dart';
 import 'package:nocturnal_flutter_tutorials/src/theme/tutorials_theme.dart';
 import 'package:nocturnal_flutter_tutorials/src/widgets/amoeba_background.dart';
 import 'package:nocturnal_flutter_tutorials/src/widgets/section_cover_page.dart';
@@ -11,8 +10,9 @@ import 'package:nocturnal_flutter_tutorials/src/widgets/tutorial_page_widget.dar
 /// A fully configurable onboarding widget that encapsulates an optional welcome
 /// screen followed by a swipeable tutorial flow.
 ///
-/// Provide either [sections] (grouped mode with section cover pages) or [pages]
-/// (flat mode with no covers). Exactly one must be non-null.
+/// [pages] is a list of [TutorialPage] whose [type] is either [GroupPage]
+/// (rendered as a section cover with child content pages) or [LeafPage]
+/// (rendered directly as a content page).
 ///
 /// Both [NocturnalOnboardingWidget] and [ConnectToMaskWidget] delegate to this
 /// widget internally.
@@ -40,20 +40,13 @@ class NocturnalTutorial extends StatelessWidget {
   /// Label for the "Get Started" button on the welcome screen.
   final String buttonLabel;
 
-  // ── Content ── (provide ONE of these)
+  // ── Content ──
 
-  /// Grouped tutorial content with section cover pages.
-  /// Mutually exclusive with [pages].
-  final List<TutorialSection>? sections;
-
-  /// Flat tutorial pages without section grouping.
-  /// Mutually exclusive with [sections].
-  final List<TutorialPage>? pages;
+  /// Tutorial pages. Each entry's [type] may be a [GroupPage] (section cover +
+  /// children) or a [LeafPage] (standalone content page).
+  final List<TutorialPage> pages;
 
   // ── Tutorial screen features ──
-
-  /// Whether to show the page counter in the top bar.
-  final bool showPageNumber;
 
   /// Whether to show a restart button on the last page.
   final bool showRestartButton;
@@ -62,7 +55,7 @@ class NocturnalTutorial extends StatelessWidget {
   final bool enableDragToScrub;
 
   /// Whether to show the current section label in the top bar.
-  /// Only applies when [sections] is used.
+  /// Only applies when pages contain [GroupPage] entries.
   final bool showSectionLabel;
 
   /// Label for the finish button shown on the last page.
@@ -94,9 +87,7 @@ class NocturnalTutorial extends StatelessWidget {
     this.subtitle = 'Better sleep starts here',
     this.skipLabel,
     this.buttonLabel = 'Get Started',
-    this.sections,
-    this.pages,
-    this.showPageNumber = false,
+    required this.pages,
     this.showRestartButton = false,
     this.enableDragToScrub = false,
     this.showSectionLabel = false,
@@ -104,18 +95,13 @@ class NocturnalTutorial extends StatelessWidget {
     this.onComplete,
     this.onSkip,
     this.packageName,
-  }) : assert(
-         (sections != null) != (pages != null),
-         'Provide exactly one of sections or pages.',
-       );
+  });
 
   @override
   Widget build(BuildContext context) {
     if (!showWelcomeScreen) {
       return _NocturnalTutorialScreen(
-        sections: sections,
         pages: pages,
-        showPageNumber: showPageNumber,
         showRestartButton: showRestartButton,
         enableDragToScrub: enableDragToScrub,
         showSectionLabel: showSectionLabel,
@@ -134,9 +120,7 @@ class NocturnalTutorial extends StatelessWidget {
       onSkip: onSkip,
       packageName: packageName,
       destinationBuilder: (context) => _NocturnalTutorialScreen(
-        sections: sections,
         pages: pages,
-        showPageNumber: showPageNumber,
         showRestartButton: showRestartButton,
         enableDragToScrub: enableDragToScrub,
         showSectionLabel: showSectionLabel,
@@ -284,20 +268,18 @@ sealed class _PageEntry {
 }
 
 class _SectionCoverEntry extends _PageEntry {
-  final TutorialSection section;
-  const _SectionCoverEntry(this.section);
+  final GroupPage group;
+  const _SectionCoverEntry(this.group);
 }
 
 class _ContentPageEntry extends _PageEntry {
-  final TutorialPage page;
-  final TutorialSection? section;
-  const _ContentPageEntry(this.page, {this.section});
+  final LeafPage leaf;
+  final GroupPage? parentGroup;
+  const _ContentPageEntry(this.leaf, {this.parentGroup});
 }
 
 class _NocturnalTutorialScreen extends StatefulWidget {
-  final List<TutorialSection>? sections;
-  final List<TutorialPage>? pages;
-  final bool showPageNumber;
+  final List<TutorialPage> pages;
   final bool showRestartButton;
   final bool enableDragToScrub;
   final bool showSectionLabel;
@@ -307,9 +289,7 @@ class _NocturnalTutorialScreen extends StatefulWidget {
   final String? packageName;
 
   const _NocturnalTutorialScreen({
-    required this.sections,
     required this.pages,
-    required this.showPageNumber,
     required this.showRestartButton,
     required this.enableDragToScrub,
     required this.showSectionLabel,
@@ -339,20 +319,17 @@ class _NocturnalTutorialScreenState extends State<_NocturnalTutorialScreen> {
     super.initState();
     _pageController = PageController();
 
-    if (widget.sections != null) {
-      // Grouped mode: section cover + content pages for each section
-      _entries = [];
-      for (final section in widget.sections!) {
-        _entries.add(_SectionCoverEntry(section));
-        for (final page in section.pages) {
-          _entries.add(_ContentPageEntry(page, section: section));
-        }
+    _entries = [];
+    for (final page in widget.pages) {
+      switch (page.type) {
+        case GroupPage group:
+          _entries.add(_SectionCoverEntry(group));
+          for (final child in group.children) {
+            _entries.add(_ContentPageEntry(child.type as LeafPage, parentGroup: group));
+          }
+        case LeafPage leaf:
+          _entries.add(_ContentPageEntry(leaf));
       }
-    } else {
-      // Flat mode: just the pages
-      _entries = [
-        for (final page in widget.pages!) _ContentPageEntry(page),
-      ];
     }
     _totalPages = _entries.length;
   }
@@ -410,11 +387,14 @@ class _NocturnalTutorialScreenState extends State<_NocturnalTutorialScreen> {
                   itemBuilder: (context, index) {
                     final entry = _entries[index];
                     return switch (entry) {
-                      _SectionCoverEntry(:final section) =>
-                        SectionCoverPage(section: section),
-                      _ContentPageEntry(:final page) =>
+                      _SectionCoverEntry(:final group) =>
+                        SectionCoverPage(
+                          group: group,
+                          packageName: widget.packageName,
+                        ),
+                      _ContentPageEntry(:final leaf) =>
                         TutorialPageWidget(
-                          page: page,
+                          leaf: leaf,
                           packageName: widget.packageName,
                         ),
                     };
@@ -472,7 +452,7 @@ class _NocturnalTutorialScreenState extends State<_NocturnalTutorialScreen> {
     if (!widget.showSectionLabel) return null;
     final entry = _entries[_currentPage];
     return switch (entry) {
-      _ContentPageEntry(:final section) => section?.sectionTitle,
+      _ContentPageEntry(:final parentGroup) => parentGroup?.title,
       _SectionCoverEntry() => null,
     };
   }
@@ -484,45 +464,33 @@ class _NocturnalTutorialScreenState extends State<_NocturnalTutorialScreen> {
         horizontal: 16,
         vertical: 12,
       ),
-      child: Column(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              widget.onSkip != null
-                  ? IconButton(
-                      onPressed: widget.onSkip!,
-                      icon: const Icon(
-                        Icons.close,
-                        color: TutorialsTheme.textSecondary,
-                      ),
-                    )
-                  : const SizedBox(width: 48),
-              if (widget.showPageNumber)
-                Text(
-                  '${_currentPage + 1}/$_totalPages',
-                  style: TutorialsTheme.pageCounterStyle,
+          widget.onSkip != null
+              ? IconButton(
+                  onPressed: widget.onSkip!,
+                  icon: const Icon(
+                    Icons.close,
+                    color: TutorialsTheme.textSecondary,
+                  ),
                 )
-              else
-                const SizedBox(width: 48),
-              const SizedBox(width: 48),
-            ],
-          ),
+              : const SizedBox(width: 48),
           if (widget.showSectionLabel)
             Opacity(
               opacity: sectionName != null ? 1.0 : 0.0,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Text(
-                  sectionName ?? '',
-                  style: TutorialsTheme.pageCounterStyle.copyWith(
-                    color:
-                        TutorialsTheme.textSecondary.withValues(alpha: 0.5),
-                    fontSize: 12,
-                  ),
+              child: Text(
+                sectionName ?? '',
+                style: TutorialsTheme.pageCounterStyle.copyWith(
+                  color:
+                      TutorialsTheme.textSecondary.withValues(alpha: 0.5),
+                  fontSize: 12,
                 ),
               ),
-            ),
+            )
+          else
+            const SizedBox.shrink(),
+          const SizedBox(width: 48),
         ],
       ),
     );

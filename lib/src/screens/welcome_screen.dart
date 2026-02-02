@@ -43,7 +43,7 @@ class WelcomeScreen extends StatelessWidget {
       onComplete: onComplete,
       onSkip: onSkip,
       finishLabel: finishLabel,
-      sections: TutorialContent.filteredSections(disabledSections),
+      pages: TutorialContent.filteredSections(disabledSections),
       enableDragToScrub: true,
       showSectionLabel: true,
     );

@@ -1,14 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:nocturnal_flutter_tutorials/src/models/instruction_point.dart';
 import 'package:nocturnal_flutter_tutorials/src/models/tutorial_page.dart';
 import 'package:nocturnal_flutter_tutorials/src/theme/tutorials_theme.dart';
 import 'package:nocturnal_flutter_tutorials/src/widgets/video_player_widget.dart';
 
-class TutorialPageWidget extends StatelessWidget {
-  final TutorialPage page;
+class TutorialPageWidget extends StatefulWidget {
+  final LeafPage leaf;
   final String? packageName;
 
-  const TutorialPageWidget({super.key, required this.page, this.packageName});
+  const TutorialPageWidget({super.key, required this.leaf, this.packageName});
+
+  @override
+  State<TutorialPageWidget> createState() => _TutorialPageWidgetState();
+}
+
+class _TutorialPageWidgetState extends State<TutorialPageWidget> {
+  LeafPage get leaf => widget.leaf;
+  String? get packageName => widget.packageName;
+
+  ScrollController? _scrollController;
+  bool _isAtBottom = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (leaf.isScrollable) {
+      _scrollController = ScrollController();
+      _scrollController!.addListener(_onScroll);
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController?.removeListener(_onScroll);
+    _scrollController?.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController == null) return;
+    final atBottom = _scrollController!.offset >=
+        _scrollController!.position.maxScrollExtent - 20;
+    if (atBottom != _isAtBottom) {
+      setState(() => _isAtBottom = atBottom);
+    }
+  }
+
+  void _scrollDownHalfPage() {
+    if (_scrollController == null) return;
+    final viewportHeight = _scrollController!.position.viewportDimension;
+    final target = (_scrollController!.offset + viewportHeight / 2)
+        .clamp(0.0, _scrollController!.position.maxScrollExtent);
+    _scrollController!.animateTo(
+      target,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +65,40 @@ class TutorialPageWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(
             horizontal: TutorialsTheme.pagePadding,
           ),
-          child: page.isScrollable
-              ? SingleChildScrollView(child: _buildContent())
-              : _buildContent(),
+          child: leaf.isScrollable
+              ? Stack(
+                  children: [
+                    SingleChildScrollView(
+                      controller: _scrollController,
+                      child: _buildContent(),
+                    ),
+                    Positioned(
+                      bottom: 16,
+                      right: 0,
+                      child: AnimatedOpacity(
+                        opacity: _isAtBottom ? 0.0 : 1.0,
+                        duration: const Duration(milliseconds: 200),
+                        child: GestureDetector(
+                          onTap: _isAtBottom ? null : _scrollDownHalfPage,
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: TutorialsTheme.accentColor.withValues(alpha: 0.8),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.keyboard_arrow_down,
+                              color: AppColors.white,
+                              size: 24,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : SingleChildScrollView(child: _buildContent()),
         )
         .animate()
         .fadeIn(duration: TutorialsTheme.entryAnimationDuration)
@@ -38,16 +118,29 @@ class TutorialPageWidget extends StatelessWidget {
         SizedBox(
           width: double.infinity,
           child: Text(
-            page.title,
+            leaf.title,
             style: TutorialsTheme.headingStyle,
             textAlign: TextAlign.center,
           ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 12),
         _buildMediaArea(),
-        if (page.instructionPoints.isNotEmpty) ...[
+        ...[
           const SizedBox(height: 24),
-          _buildInstructionPoints(),
+          _buildInstructionContent(),
+        ],
+        if (leaf.footerText != null) ...[
+          const SizedBox(height: 32),
+          SizedBox(
+            width: double.infinity,
+            child: Text(
+              leaf.footerText!,
+              style: TutorialsTheme.instructionDescriptionStyle.copyWith(
+                fontStyle: FontStyle.italic,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
         ],
         const SizedBox(height: 40),
       ],
@@ -55,7 +148,7 @@ class TutorialPageWidget extends StatelessWidget {
   }
 
   Widget _buildMediaArea() {
-    switch (page.contentType) {
+    switch (leaf.contentType) {
       case ContentType.text:
         return const SizedBox.shrink();
       case ContentType.textAndImage:
@@ -72,11 +165,11 @@ class TutorialPageWidget extends StatelessWidget {
   }
 
   Widget _buildImageOrPlaceholder() {
-    if (page.imagePath != null) {
+    if (leaf.imagePath != null) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(TutorialsTheme.cardBorderRadius),
         child: Image.asset(
-          page.imagePath!,
+          leaf.imagePath!,
           package: packageName,
           width: double.infinity,
           height: 240,
@@ -103,7 +196,7 @@ class TutorialPageWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            page.placeholderIcon ?? Icons.image,
+            leaf.placeholderIcon ?? Icons.image,
             size: TutorialsTheme.placeholderIconSize,
             color: TutorialsTheme.accentColor.withValues(alpha: 0.6),
           ),
@@ -121,14 +214,14 @@ class TutorialPageWidget extends StatelessWidget {
   }
 
   Widget _buildVideoArea() {
-    if (page.videoUrl != null) {
+    if (leaf.videoUrl != null) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(TutorialsTheme.cardBorderRadius),
         child: SizedBox(
           width: double.infinity,
           height: 240,
           child: VideoPlayerWidget(
-            videoUrl: page.videoUrl!,
+            videoUrl: leaf.videoUrl!,
             packageName: packageName,
           ),
         ),
@@ -138,14 +231,14 @@ class TutorialPageWidget extends StatelessWidget {
   }
 
   Widget _buildPortraitVideoArea() {
-    if (page.videoUrl != null) {
+    if (leaf.videoUrl != null) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(TutorialsTheme.cardBorderRadius),
         child: SizedBox(
           width: double.infinity,
           height: 300,
           child: VideoPlayerWidget(
-            videoUrl: page.videoUrl!,
+            videoUrl: leaf.videoUrl!,
             aspectRatio: 9 / 16,
             packageName: packageName,
           ),
@@ -156,11 +249,11 @@ class TutorialPageWidget extends StatelessWidget {
   }
 
   Widget _buildGifArea() {
-    if (page.gifPath != null) {
+    if (leaf.gifPath != null) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(TutorialsTheme.cardBorderRadius),
         child: Image.asset(
-          page.gifPath!,
+          leaf.gifPath!,
           package: packageName,
           width: double.infinity,
           height: 240,
@@ -176,7 +269,7 @@ class TutorialPageWidget extends StatelessWidget {
     return Column(
       children: [
         _buildImageOrPlaceholder(),
-        if (page.videoUrl != null) ...[
+        if (leaf.videoUrl != null) ...[
           const SizedBox(height: 16),
           _buildVideoArea(),
         ],
@@ -184,31 +277,75 @@ class TutorialPageWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildInstructionPoints() {
-    return Column(
-      children: [
-        for (int i = 0; i < page.instructionPoints.length; i++) ...[
-          if (i > 0) const SizedBox(height: 28),
-          SizedBox(
-            width: double.infinity,
-            child: Column(
-              children: [
-                Text(
-                  page.instructionPoints[i].headline,
-                  style: TutorialsTheme.instructionHeadlineStyle,
-                  textAlign: TextAlign.center,
+  Widget _buildInstructionContent() {
+    return switch (leaf.instructionContent) {
+      DetailedInstructions(:final points) => Column(
+          children: [
+            for (int i = 0; i < points.length; i++) ...[
+              if (i > 0) const SizedBox(height: 28),
+              SizedBox(
+                width: double.infinity,
+                child: Column(
+                  children: [
+                    Text(
+                      points[i].headline,
+                      style: TutorialsTheme.instructionHeadlineStyle,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      points[i].description,
+                      style: TutorialsTheme.instructionDescriptionStyle,
+                      textAlign: TextAlign.center,
+                    ),
+                    if (points[i].tip != null) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        points[i].tip!,
+                        style: TutorialsTheme.instructionDescriptionStyle.copyWith(
+                          fontStyle: FontStyle.italic,
+                          fontSize: 12,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ],
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  page.instructionPoints[i].description,
-                  style: TutorialsTheme.instructionDescriptionStyle,
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ],
-    );
+              ),
+            ],
+          ],
+        ),
+      BulletPoints(:final bullets) => Column(
+          children: [
+            for (int i = 0; i < bullets.length; i++) ...[
+              if (i > 0) const SizedBox(height: 28),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Container(
+                      width: 6,
+                      height: 6,
+                      decoration: BoxDecoration(
+                        color: TutorialsTheme.instructionDescriptionStyle.color ?? Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      bullets[i],
+                      style: TutorialsTheme.instructionDescriptionStyle.copyWith(fontSize: 16),
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ],
+        ),
+    };
   }
 }
