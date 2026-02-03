@@ -281,14 +281,12 @@ class TutorialContent {
     TutorialPage(LeafPage(
       title: 'Instructions',
       contentType: ContentType.text,
-      isScrollable: true,
       instructionContent: BulletPoints(bullets: [
         'Do not wear the mask just yet. We’ll guide you through how to put it on and ensure the hydrogels are correctly placed for optimal effectiveness.',
         'Make sure the skin behind your ears is clean and free of jewelry.',
         'Find a comfortable place to sit or lie down, you’ll begin your first experience shortly.',
         'Before starting, turn up the volume on your phone so you can hear and respond to the audio instructions.',
         'Make sure the Mask is unplugged.'
-
       ]),
     )),
     TutorialPage(LeafPage(
