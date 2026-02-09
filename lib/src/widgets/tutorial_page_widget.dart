@@ -111,39 +111,44 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
   }
 
   Widget _buildContent() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 16),
-        SizedBox(
-          width: double.infinity,
-          child: Text(
-            leaf.title,
-            style: TutorialsTheme.headingStyle,
-            textAlign: TextAlign.center,
-          ),
-        ),
-        const SizedBox(height: 12),
-        _buildMediaArea(),
-        ...[
-          const SizedBox(height: 24),
-          _buildInstructionContent(),
-        ],
-        if (leaf.footerText != null) ...[
-          const SizedBox(height: 32),
-          SizedBox(
-            width: double.infinity,
-            child: Text(
-              leaf.footerText!,
-              style: TutorialsTheme.instructionDescriptionStyle.copyWith(
-                fontStyle: FontStyle.italic,
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: TutorialsTheme.contentMaxWidth),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: Text(
+                leaf.title,
+                style: TutorialsTheme.headingStyle,
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
-          ),
-        ],
-        const SizedBox(height: 40),
-      ],
+            const SizedBox(height: 12),
+            _buildMediaArea(),
+            ...[
+              const SizedBox(height: 24),
+              _buildInstructionContent(),
+            ],
+            if (leaf.footerText != null) ...[
+              const SizedBox(height: 32),
+              SizedBox(
+                width: double.infinity,
+                child: Text(
+                  leaf.footerText!,
+                  style: TutorialsTheme.instructionDescriptionStyle.copyWith(
+                    fontStyle: FontStyle.italic,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+            const SizedBox(height: 40),
+          ],
+        ),
+      ),
     );
   }
 
@@ -172,8 +177,7 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
           leaf.imagePath!,
           package: packageName,
           width: double.infinity,
-          height: 240,
-          fit: BoxFit.cover,
+          fit: BoxFit.contain,
           errorBuilder: (_, __, ___) => _buildPlaceholder(),
         ),
       );
@@ -256,8 +260,7 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
           leaf.gifPath!,
           package: packageName,
           width: double.infinity,
-          height: 240,
-          fit: BoxFit.cover,
+          fit: BoxFit.contain,
           errorBuilder: (_, __, ___) => _buildPlaceholder(),
         ),
       );

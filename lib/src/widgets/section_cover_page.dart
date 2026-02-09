@@ -17,39 +17,43 @@ class SectionCoverPage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(
           horizontal: TutorialsTheme.pagePadding,
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              group.title.toUpperCase(),
-              textAlign: TextAlign.center,
-              style: TutorialsTheme.sectionTitleStyle.copyWith(
-                fontSize: 28,
-                letterSpacing: 2,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              group.subtitle,
-              textAlign: TextAlign.center,
-              style: TutorialsTheme.subheadingStyle,
-            ),
-            if (group.imagePath != null) ...[
-              const SizedBox(height: 24),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(
-                  TutorialsTheme.cardBorderRadius,
-                ),
-                child: Image.asset(
-                  group.imagePath!,
-                  package: packageName,
-                  height: 240,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: TutorialsTheme.contentMaxWidth),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                group.title.toUpperCase(),
+                textAlign: TextAlign.center,
+                style: TutorialsTheme.sectionTitleStyle.copyWith(
+                  fontSize: 28,
+                  letterSpacing: 2,
                 ),
               ),
+              const SizedBox(height: 12),
+              Text(
+                group.subtitle,
+                textAlign: TextAlign.center,
+                style: TutorialsTheme.subheadingStyle,
+              ),
+              if (group.imagePath != null) ...[
+                const SizedBox(height: 24),
+                Flexible(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(
+                      TutorialsTheme.cardBorderRadius,
+                    ),
+                    child: Image.asset(
+                      group.imagePath!,
+                      package: packageName,
+                      width: double.infinity,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     )

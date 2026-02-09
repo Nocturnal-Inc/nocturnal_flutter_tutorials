@@ -178,6 +178,8 @@ class TutorialsTheme {
   static const double buttonBorderRadius = 30.0;
   static const double cardBorderRadius = 16.0;
   static const double placeholderIconSize = 80.0;
+  static const double mediaMaxWidth = 600.0;
+  static const double contentMaxWidth = 600.0;
 
   // Durations
   static const Duration pageTransitionDuration = Duration(milliseconds: 400);
