@@ -21,6 +21,8 @@ class AppColors {
   static const Color green = Color.fromRGBO(90, 163, 93, 1);
   static const Color lightGreen = Color.fromRGBO(144, 238, 144, 1);
   static const Color red = Color.fromRGBO(160, 40, 56, 1);
+
+  static const Color glossyBlack = Color.fromRGBO(0, 0, 0, 1);
 }
 
 /// Gradients matching nocturnal_mobile's AppGradients.
@@ -54,33 +56,21 @@ class AppGradients {
   static const LinearGradient redSunset = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-    colors: [
-      AppColors.magenta,
-      AppColors.violet,
-      AppColors.darkBlue,
-    ],
+    colors: [AppColors.magenta, AppColors.violet, AppColors.darkBlue],
     stops: [0.0, 0.5, 1.0],
   );
 
   static const LinearGradient sunrise = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-    colors: [
-      AppColors.yellow,
-      AppColors.magenta,
-      AppColors.violet,
-    ],
+    colors: [AppColors.yellow, AppColors.magenta, AppColors.violet],
     stops: [0.0, 0.5, 1.0],
   );
 
   static const LinearGradient night = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-    colors: [
-      AppColors.darkBlue,
-      AppColors.darkPurple,
-      AppColors.violet,
-    ],
+    colors: [AppColors.darkBlue, AppColors.darkPurple, AppColors.violet],
     stops: [0.0, 0.5, 1.0],
   );
 }
@@ -92,7 +82,7 @@ class TutorialsTheme {
   static const Color primaryColor = AppColors.navyBlue;
   static const Color accentColor = AppColors.violet;
   static const Color surfaceColor = AppColors.darkBlue;
-  static const Color backgroundColor = AppColors.navyBlue;
+  static const Color backgroundColor = AppColors.glossyBlack;
   static const Color textPrimary = AppColors.white;
   static const Color textSecondary = AppColors.lightBlue;
   static const Color dotActiveColor = AppColors.yellow;

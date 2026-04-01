@@ -186,38 +186,34 @@ class _NocturnalWelcomeScreen extends StatelessWidget {
                 Text(
                   subtitle,
                   style: TutorialsTheme.subheadingStyle.copyWith(
-                    color:
-                        TutorialsTheme.textSecondary.withValues(alpha: 0.8),
+                    color: TutorialsTheme.textSecondary.withValues(alpha: 0.8),
                   ),
                 ),
                 const SizedBox(height: 60),
                 SizedBox(
-                  width: 220,
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: destinationBuilder,
+                      width: 180,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: destinationBuilder),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: TutorialsTheme.buttonColor,
+                          foregroundColor: TutorialsTheme.buttonTextColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              TutorialsTheme.buttonBorderRadius,
+                            ),
+                          ),
+                          elevation: 4,
                         ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: TutorialsTheme.buttonColor,
-                      foregroundColor: TutorialsTheme.buttonTextColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          TutorialsTheme.buttonBorderRadius,
+                        child: Text(
+                          buttonLabel,
+                          style: TutorialsTheme.buttonTextStyle,
                         ),
                       ),
-                      elevation: 4,
-                    ),
-                    child: Text(
-                      buttonLabel,
-                      style: TutorialsTheme.buttonTextStyle,
-                    ),
-                  ),
-                )
+                    )
                     .animate()
                     .fadeIn(
                       delay: const Duration(milliseconds: 600),
@@ -243,12 +239,10 @@ class _NocturnalWelcomeScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                  )
-                      .animate()
-                      .fadeIn(
-                        delay: const Duration(milliseconds: 900),
-                        duration: const Duration(milliseconds: 800),
-                      ),
+                  ).animate().fadeIn(
+                    delay: const Duration(milliseconds: 900),
+                    duration: const Duration(milliseconds: 800),
+                  ),
               ],
             ),
           ),
@@ -325,7 +319,9 @@ class _NocturnalTutorialScreenState extends State<_NocturnalTutorialScreen> {
         case GroupPage group:
           _entries.add(_SectionCoverEntry(group));
           for (final child in group.children) {
-            _entries.add(_ContentPageEntry(child.type as LeafPage, parentGroup: group));
+            _entries.add(
+              _ContentPageEntry(child.type as LeafPage, parentGroup: group),
+            );
           }
         case LeafPage leaf:
           _entries.add(_ContentPageEntry(leaf));
@@ -387,16 +383,14 @@ class _NocturnalTutorialScreenState extends State<_NocturnalTutorialScreen> {
                   itemBuilder: (context, index) {
                     final entry = _entries[index];
                     return switch (entry) {
-                      _SectionCoverEntry(:final group) =>
-                        SectionCoverPage(
-                          group: group,
-                          packageName: widget.packageName,
-                        ),
-                      _ContentPageEntry(:final leaf) =>
-                        TutorialPageWidget(
-                          leaf: leaf,
-                          packageName: widget.packageName,
-                        ),
+                      _SectionCoverEntry(:final group) => SectionCoverPage(
+                        group: group,
+                        packageName: widget.packageName,
+                      ),
+                      _ContentPageEntry(:final leaf) => TutorialPageWidget(
+                        leaf: leaf,
+                        packageName: widget.packageName,
+                      ),
                     };
                   },
                 ),
@@ -460,10 +454,7 @@ class _NocturnalTutorialScreenState extends State<_NocturnalTutorialScreen> {
   Widget _buildTopBar() {
     final sectionName = _currentSectionName;
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 12,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -482,8 +473,7 @@ class _NocturnalTutorialScreenState extends State<_NocturnalTutorialScreen> {
               child: Text(
                 sectionName ?? '',
                 style: TutorialsTheme.pageCounterStyle.copyWith(
-                  color:
-                      TutorialsTheme.textSecondary.withValues(alpha: 0.5),
+                  color: TutorialsTheme.textSecondary.withValues(alpha: 0.5),
                   fontSize: 12,
                 ),
               ),
@@ -497,8 +487,7 @@ class _NocturnalTutorialScreenState extends State<_NocturnalTutorialScreen> {
   }
 
   Widget _buildBottomIndicator() {
-    const double dotPitch =
-        TutorialsTheme.dotSize + TutorialsTheme.dotSpacing;
+    const double dotPitch = TutorialsTheme.dotSize + TutorialsTheme.dotSpacing;
 
     final indicator = Padding(
       padding: const EdgeInsets.only(bottom: 24, top: 8),
@@ -524,8 +513,7 @@ class _NocturnalTutorialScreenState extends State<_NocturnalTutorialScreen> {
         _indicatorDragAccumulator = 0.0;
       },
       onHorizontalDragUpdate: (details) {
-        _indicatorDragAccumulator +=
-            details.delta.dx * _kDotScrubSensitivity;
+        _indicatorDragAccumulator += details.delta.dx * _kDotScrubSensitivity;
 
         while (_indicatorDragAccumulator <= -dotPitch) {
           _indicatorDragAccumulator += dotPitch;

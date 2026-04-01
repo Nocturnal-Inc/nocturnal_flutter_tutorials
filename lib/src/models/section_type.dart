@@ -1,4 +1,5 @@
 enum SectionType {
+  start('Powering On'),
   ePad('E pad'),
   facepad('Facepad'),
   earloops('Earloops'),
