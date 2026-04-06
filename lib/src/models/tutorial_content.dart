@@ -11,9 +11,9 @@ class TutorialContent {
         contentType: ContentType.text,
         instructionContent: BulletPoints(
           bullets: [
-            'This tutorial is designed to help you get started with your SleepWare.',
+            'This tutorial is designed to help you get started with your Noche.',
             'This tutorial will guide you through the use and maintenance of each component.',
-            'Please have the SleepWare ready next to you during this process.',
+            'Please have the Noche ready next to you during this process.',
           ],
         ),
         footerText: "Time estimation: 10 minutes",
@@ -30,7 +30,7 @@ class TutorialContent {
             InstructionPoint(
               headline: 'E-pad',
               description:
-                  'The E-pad houses all the sensors, battery and electronics for your SleepWare device.',
+                  'The E-pad houses all the sensors, battery and electronics for your Noche device.',
             ),
             InstructionPoint(
               headline: 'Facepad',
@@ -40,7 +40,7 @@ class TutorialContent {
             InstructionPoint(
               headline: 'Earloops',
               description:
-                  'The earloops help keep the SleepWare device around the ears and the head. Earloops also house the hydrogels which go behind your ear for neuromodulation.',
+                  'The earloops help keep the Noche device around the ears and the head. Earloops also house the hydrogels which go behind your ear for neuromodulation.',
             ),
           ],
         ),
@@ -72,7 +72,7 @@ class TutorialContent {
             InstructionPoint(
               headline: 'QR code',
               description:
-                  'Use QR code to connect to the SleepWare when prompted by the app.',
+                  'Use QR code to connect to the Noche when prompted by the app.',
             ),
           ],
         ),
@@ -82,12 +82,12 @@ class TutorialContent {
     TutorialPage(
       GroupPage(
         sectionType: SectionType.start,
-        subtitle: "Now let's learn how to get started using the SleepWare.",
+        subtitle: "Now let's learn how to get started using the Noche.",
         imagePath: 'assets/images/onboarding/epad.png',
         children: [
           TutorialPage(
             LeafPage(
-              title: 'Turning on the SleepWare',
+              title: 'Turning on the Noche',
               contentType: ContentType.video,
               videoUrl: 'assets/videos/onboarding/power_button.mp4',
               instructionContent: DetailedInstructions(
@@ -110,7 +110,7 @@ class TutorialContent {
           ),
           TutorialPage(
             LeafPage(
-              title: 'Turning off the SleepWare',
+              title: 'Turning off the Noche',
               contentType: ContentType.video,
               videoUrl: 'assets/videos/onboarding/poweroff.mp4',
               instructionContent: DetailedInstructions(
@@ -274,31 +274,16 @@ class TutorialContent {
         children: [
           TutorialPage(
             LeafPage(
-              title: 'Unpacking the Hydrogels',
-              contentType: ContentType.video,
-              videoUrl: 'assets/videos/onboarding/hydrogels_bag.mp4',
-              instructionContent: DetailedInstructions(
-                points: [
-                  InstructionPoint(
-                    headline: 'Hydrogel Packaging',
-                    description:
-                        'Locate the shiny ziplock bag included with the device.',
-                  ),
-                  InstructionPoint(
-                    headline: 'Unpacking the Hydrogels',
-                    description: "Remove 4 hydrogels from the bag.",
-                  ),
-                ],
-              ),
-            ),
-          ),
-          TutorialPage(
-            LeafPage(
               title: 'Installing the hydrogels',
               contentType: ContentType.video,
               videoUrl: 'assets/videos/onboarding/hydrogels_installation.mp4',
+              isScrollable: true,
               instructionContent: DetailedInstructions(
                 points: [
+                  InstructionPoint(
+                    headline: 'Unpacking the Hydrogels',
+                    description: "Remove 4 hydrogels from the container.",
+                  ),
                   InstructionPoint(
                     headline: 'Installation',
                     description:
@@ -332,7 +317,7 @@ class TutorialContent {
                   InstructionPoint(
                     headline: 'Maintenance',
                     description:
-                        'Hydrogels require hydration for optimal performance. New hydrogels are hydrated and ready to use. To rehydrate the hydrogels, store them in the lens case submerged in the saline solution, when not in use. We recommend rehydration every 1–2 days for best performance.',
+                        'Hydrogels require hydration for optimal performance. New hydrogels are hydrated and ready to use. To rehydrate the hydrogels, store them in the container submerged in the saline solution, when not in use. We recommend rehydration every 1–2 days for best performance.',
                   ),
                 ],
               ),
