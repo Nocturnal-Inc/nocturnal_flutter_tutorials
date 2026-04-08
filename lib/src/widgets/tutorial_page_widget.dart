@@ -40,7 +40,8 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
 
   void _onScroll() {
     if (_scrollController == null) return;
-    final atBottom = _scrollController!.offset >=
+    final atBottom =
+        _scrollController!.offset >=
         _scrollController!.position.maxScrollExtent - 20;
     if (atBottom != _isAtBottom) {
       setState(() => _isAtBottom = atBottom);
@@ -50,8 +51,10 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
   void _scrollDownHalfPage() {
     if (_scrollController == null) return;
     final viewportHeight = _scrollController!.position.viewportDimension;
-    final target = (_scrollController!.offset + viewportHeight / 2)
-        .clamp(0.0, _scrollController!.position.maxScrollExtent);
+    final target = (_scrollController!.offset + viewportHeight / 2).clamp(
+      0.0,
+      _scrollController!.position.maxScrollExtent,
+    );
     _scrollController!.animateTo(
       target,
       duration: const Duration(milliseconds: 300),
@@ -84,7 +87,9 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
                             width: 40,
                             height: 40,
                             decoration: BoxDecoration(
-                              color: TutorialsTheme.accentColor.withValues(alpha: 0.8),
+                              color: TutorialsTheme.accentColor.withValues(
+                                alpha: 0.8,
+                              ),
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(
@@ -113,7 +118,9 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
   Widget _buildContent() {
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: TutorialsTheme.contentMaxWidth),
+        constraints: const BoxConstraints(
+          maxWidth: TutorialsTheme.contentMaxWidth,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -128,10 +135,7 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
             ),
             const SizedBox(height: 12),
             _buildMediaArea(),
-            ...[
-              const SizedBox(height: 24),
-              _buildInstructionContent(),
-            ],
+            ...[const SizedBox(height: 24), _buildInstructionContent()],
             if (leaf.footerText != null) ...[
               const SizedBox(height: 32),
               SizedBox(
@@ -283,72 +287,74 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
   Widget _buildInstructionContent() {
     return switch (leaf.instructionContent) {
       DetailedInstructions(:final points) => Column(
-          children: [
-            for (int i = 0; i < points.length; i++) ...[
-              if (i > 0) const SizedBox(height: 28),
-              SizedBox(
-                width: double.infinity,
-                child: Column(
-                  children: [
-                    Text(
-                      points[i].headline,
-                      style: TutorialsTheme.instructionHeadlineStyle,
-                      textAlign: TextAlign.center,
-                    ),
+        children: [
+          for (int i = 0; i < points.length; i++) ...[
+            if (i > 0) const SizedBox(height: 28),
+            SizedBox(
+              width: double.infinity,
+              child: Column(
+                children: [
+                  Text(
+                    points[i].headline,
+                    style: TutorialsTheme.instructionHeadlineStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    points[i].description,
+                    style: TutorialsTheme.instructionDescriptionStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                  if (points[i].tip != null) ...[
                     const SizedBox(height: 4),
                     Text(
-                      points[i].description,
-                      style: TutorialsTheme.instructionDescriptionStyle,
+                      points[i].tip!,
+                      style: TutorialsTheme.instructionDescriptionStyle
+                          .copyWith(fontStyle: FontStyle.italic, fontSize: 12),
                       textAlign: TextAlign.center,
                     ),
-                    if (points[i].tip != null) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        points[i].tip!,
-                        style: TutorialsTheme.instructionDescriptionStyle.copyWith(
-                          fontStyle: FontStyle.italic,
-                          fontSize: 12,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
                   ],
-                ),
-              ),
-            ],
-          ],
-        ),
-      BulletPoints(:final bullets) => Column(
-          children: [
-            for (int i = 0; i < bullets.length; i++) ...[
-              if (i > 0) const SizedBox(height: 28),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Container(
-                      width: 6,
-                      height: 6,
-                      decoration: BoxDecoration(
-                        color: TutorialsTheme.instructionDescriptionStyle.color ?? Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      bullets[i],
-                      style: TutorialsTheme.instructionDescriptionStyle.copyWith(fontSize: 16),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
                 ],
               ),
-            ],
+            ),
           ],
-        ),
+        ],
+      ),
+      BulletPoints(:final bullets) => Column(
+        children: [
+          for (int i = 0; i < bullets.length; i++) ...[
+            if (i > 0) const SizedBox(height: 28),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Container(
+                    width: 6,
+                    height: 6,
+                    decoration: BoxDecoration(
+                      color:
+                          TutorialsTheme.instructionDescriptionStyle.color ??
+                          Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    bullets[i],
+                    style: TutorialsTheme.instructionDescriptionStyle.copyWith(
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ],
+      ),
     };
   }
 }

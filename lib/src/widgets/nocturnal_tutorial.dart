@@ -399,8 +399,7 @@ class _NocturnalTutorialScreenState extends State<_NocturnalTutorialScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 8, bottom: 16),
                   child: SizedBox(
-                    width: 220,
-                    height: 56,
+                    width: 180,
                     child: ElevatedButton(
                       onPressed: _finish,
                       style: ElevatedButton.styleFrom(

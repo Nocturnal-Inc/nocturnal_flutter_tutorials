@@ -51,7 +51,6 @@ class TutorialContent {
         title: 'Accessories',
         contentType: ContentType.textAndImage,
         imagePath: 'assets/images/onboarding/accessories.png',
-        isScrollable: true,
         instructionContent: DetailedInstructions(
           points: [
             InstructionPoint(
@@ -186,85 +185,7 @@ class TutorialContent {
       ),
     ),
 
-    // Section 3: Earloops
-    TutorialPage(
-      GroupPage(
-        sectionType: SectionType.earloops,
-        subtitle:
-            'These attach the device around the face and contain the hydrogels.',
-        imagePath: 'assets/images/onboarding/earloops.png',
-        children: [
-          TutorialPage(
-            LeafPage(
-              title: 'Connecting the Earloops',
-              contentType: ContentType.video,
-              videoUrl: 'assets/videos/onboarding/earloop_connector.mp4',
-              placeholderIcon: Icons.hearing,
-              instructionContent: DetailedInstructions(
-                points: [
-                  InstructionPoint(
-                    headline: 'Connector',
-                    description:
-                        'The earloops attach to the E-pad using a magnetic connector. To disconnect, gently pull on the fabric above the connector. To reattach, place the connector into the port and press gently until it clicks into place.',
-                  ),
-                  InstructionPoint(
-                    headline: 'Earloop',
-                    description:
-                        'Use the Velcro on the front of the device to adjust the earloop position. Secure with a gentle tug for a comfortable fit.',
-                  ),
-                ],
-              ),
-            ),
-          ),
-          TutorialPage(
-            LeafPage(
-              title: 'Headstrap',
-              contentType: ContentType.video,
-              videoUrl: 'assets/videos/onboarding/headstrap.mp4',
-              placeholderIcon: Icons.hearing,
-              instructionContent: DetailedInstructions(
-                points: [
-                  InstructionPoint(
-                    headline: 'Fabric',
-                    description:
-                        'The headstrap wraps around your head to help secure the mask in place.',
-                  ),
-                  InstructionPoint(
-                    headline: 'Adjustment',
-                    description:
-                        'Use the Velcro on the headstrap to adjust for a comfortable, secure fit.',
-                  ),
-                ],
-              ),
-            ),
-          ),
-          TutorialPage(
-            LeafPage(
-              title: 'Earloop adjustment',
-              contentType: ContentType.video,
-              videoUrl: 'assets/videos/onboarding/earloop_adjustment.mp4',
-              placeholderIcon: Icons.hearing,
-              instructionContent: DetailedInstructions(
-                points: [
-                  InstructionPoint(
-                    headline: 'Adjustment',
-                    description:
-                        'Start by holding the mask against your face. With your other hand, adjust the earloop by detaching it from the front Velcro and reattaching it in the desired position.',
-                  ),
-                  InstructionPoint(
-                    headline: 'Reasoning',
-                    description:
-                        'This adjustment changes the position of the fabric behind the ear for improved comfort and hydrogel placement.',
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
-
-    // Section 4: Hydrogels
+    // Section 3: Hydrogels
     TutorialPage(
       GroupPage(
         sectionType: SectionType.hydrogels,
@@ -277,7 +198,6 @@ class TutorialContent {
               title: 'Installing the hydrogels',
               contentType: ContentType.video,
               videoUrl: 'assets/videos/onboarding/hydrogels_installation.mp4',
-              isScrollable: true,
               instructionContent: DetailedInstructions(
                 points: [
                   InstructionPoint(
@@ -326,6 +246,66 @@ class TutorialContent {
         ],
       ),
     ),
+
+    // Section 4: Earloops
+    TutorialPage(
+      GroupPage(
+        sectionType: SectionType.earloops,
+        subtitle:
+            'These attach the device around the face and contain the hydrogels.',
+        imagePath: 'assets/images/onboarding/earloops.png',
+        children: [
+          TutorialPage(
+            LeafPage(
+              title: 'Connecting the Earloops',
+              contentType: ContentType.video,
+              videoUrl: 'assets/videos/onboarding/earloop_connector.mp4',
+              placeholderIcon: Icons.hearing,
+              instructionContent: DetailedInstructions(
+                points: [
+                  InstructionPoint(
+                    headline: 'Connector',
+                    description:
+                        'The earloops attach to the E-pad using a magnetic connector. To disconnect, gently pull on the fabric above the connector. To reattach, place the connector into the port and press gently until it clicks into place.',
+                  ),
+                  InstructionPoint(
+                    headline: 'Earloop',
+                    description:
+                        'Use the Velcro on the front of the device to adjust the earloop position. Secure with a gentle tug for a comfortable fit.',
+                  ),
+                ],
+              ),
+            ),
+          ),
+          TutorialPage(
+            LeafPage(
+              title: 'Device Fitting',
+              contentType: ContentType.video,
+              videoUrl: 'assets/videos/onboarding/headstrap.mp4',
+              placeholderIcon: Icons.hearing,
+              instructionContent: DetailedInstructions(
+                points: [
+                  InstructionPoint(
+                    headline: 'Secure Fit',
+                    description:
+                        'You have two adjustment points: lower front velcro and the headstrap.',
+                  ),
+                  InstructionPoint(
+                    headline: 'Comfort',
+                    description: 'Adjust to remove any pressure points.',
+                  ),
+                  InstructionPoint(
+                    headline: 'Hydrogel/Mastoid Contact',
+                    description:
+                        'Adjust until hydrogels make good contact behind your ear.',
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
   ];
 
   static int get totalPageCount => sections.fold(0, (sum, page) {
@@ -354,7 +334,6 @@ class TutorialContent {
             'Do not wear the mask just yet. We’ll guide you through how to put it on and ensure the hydrogels are correctly placed for optimal effectiveness.',
             'Make sure the skin behind your ears is clean and free of jewelry.',
             'Find a comfortable place to sit or lie down, you’ll begin your first experience shortly.',
-            'Before starting, turn up the volume on your phone so you can hear and respond to the audio instructions.',
             'Make sure the Mask is unplugged.',
           ],
         ),
@@ -408,7 +387,7 @@ class TutorialContent {
           bullets: [
             'Get comfortable in the place where you plan to begin your experience.',
             'If you’re confident putting on the device, tap Start and put it on.',
-            'In the next section, you’ll begin experience optimization. You’ll be asked to answer simple yes or no questions when you see a green light. In rare cases, you may notice mild numbness or tingling behind your ears. This is normal and safe. If needed, we’ll adjust your stimulation profile to reduce any discomfort.',
+            'In the next section, you’ll begin optimizing your experience by exploring a range of stimulation intensities. In rare cases, you may feel a mild tingling sensation behind your ears. This is normal and safe. If you do notice tingling, simply lower the intensity before testing again.',
           ],
         ),
       ),

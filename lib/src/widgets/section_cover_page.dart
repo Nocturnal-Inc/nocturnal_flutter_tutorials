@@ -13,50 +13,52 @@ class SectionCoverPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: TutorialsTheme.pagePadding,
-        ),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: TutorialsTheme.contentMaxWidth),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                group.title.toUpperCase(),
-                textAlign: TextAlign.center,
-                style: TutorialsTheme.sectionTitleStyle.copyWith(
-                  fontSize: 28,
-                  letterSpacing: 2,
-                ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: TutorialsTheme.pagePadding,
+            ),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: TutorialsTheme.contentMaxWidth,
               ),
-              const SizedBox(height: 12),
-              Text(
-                group.subtitle,
-                textAlign: TextAlign.center,
-                style: TutorialsTheme.subheadingStyle,
-              ),
-              if (group.imagePath != null) ...[
-                const SizedBox(height: 24),
-                Flexible(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                      TutorialsTheme.cardBorderRadius,
-                    ),
-                    child: Image.asset(
-                      group.imagePath!,
-                      package: packageName,
-                      width: double.infinity,
-                      fit: BoxFit.contain,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    group.title.toUpperCase(),
+                    textAlign: TextAlign.center,
+                    style: TutorialsTheme.sectionTitleStyle.copyWith(
+                      fontSize: 28,
+                      letterSpacing: 2,
                     ),
                   ),
-                ),
-              ],
-            ],
+                  const SizedBox(height: 12),
+                  Text(
+                    group.subtitle,
+                    textAlign: TextAlign.center,
+                    style: TutorialsTheme.subheadingStyle,
+                  ),
+                  if (group.imagePath != null) ...[
+                    const SizedBox(height: 24),
+                    Flexible(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          TutorialsTheme.cardBorderRadius,
+                        ),
+                        child: Image.asset(
+                          group.imagePath!,
+                          package: packageName,
+                          width: double.infinity,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
-    )
+        )
         .animate()
         .fadeIn(duration: TutorialsTheme.entryAnimationDuration)
         .slideY(
