@@ -56,7 +56,7 @@ class TutorialContent {
             InstructionPoint(
               headline: 'Hydrogels',
               description:
-                  'Hydrogels are the electrical interface between the device and you.',
+                  'Hydrogels are the interface between you and the device.',
             ),
             InstructionPoint(
               headline: 'Hydrogel solution',
@@ -66,7 +66,7 @@ class TutorialContent {
             InstructionPoint(
               headline: 'Hydrogel carrier case',
               description:
-                  'Use this case to store and rehydrate the dried hydrogels when not in use.',
+                  'Use this case to store and rehydrate the hydrogels when not in use.',
             ),
             InstructionPoint(
               headline: 'QR code',
@@ -189,8 +189,7 @@ class TutorialContent {
     TutorialPage(
       GroupPage(
         sectionType: SectionType.hydrogels,
-        subtitle:
-            'These are the electrical interface between the device and the user',
+        subtitle: 'This is the interface between you and the device',
         imagePath: 'assets/images/onboarding/hydrogels.png',
         children: [
           TutorialPage(
