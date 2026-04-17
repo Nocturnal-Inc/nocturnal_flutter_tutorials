@@ -201,10 +201,8 @@ class _NocturnalWelcomeScreen extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: TutorialsTheme.buttonColor,
                           foregroundColor: TutorialsTheme.buttonTextColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              TutorialsTheme.buttonBorderRadius,
-                            ),
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: TutorialsTheme.buttonBorderRadiusShape,
                           ),
                           elevation: 4,
                         ),

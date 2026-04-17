@@ -83,19 +83,19 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
                         duration: const Duration(milliseconds: 200),
                         child: GestureDetector(
                           onTap: _isAtBottom ? null : _scrollDownHalfPage,
-                          child: Container(
+                          child: const SizedBox(
                             width: 40,
                             height: 40,
-                            decoration: BoxDecoration(
-                              color: TutorialsTheme.accentColor.withValues(
-                                alpha: 0.8,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: TutorialsTheme.scrollDownButtonColor,
+                                shape: BoxShape.circle,
                               ),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.keyboard_arrow_down,
-                              color: AppColors.white,
-                              size: 24,
+                              child: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: AppColors.white,
+                                size: 24,
+                              ),
                             ),
                           ),
                         ),
@@ -176,7 +176,7 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
   Widget _buildImageOrPlaceholder() {
     if (leaf.imagePath != null) {
       return ClipRRect(
-        borderRadius: BorderRadius.circular(TutorialsTheme.cardBorderRadius),
+        borderRadius: TutorialsTheme.cardBorderRadiusShape,
         child: Image.asset(
           leaf.imagePath!,
           package: packageName,
@@ -193,11 +193,11 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
     return Container(
       width: double.infinity,
       height: 240,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: TutorialsTheme.surfaceColor,
-        borderRadius: BorderRadius.circular(TutorialsTheme.cardBorderRadius),
-        border: Border.all(
-          color: TutorialsTheme.dotInactiveColor.withValues(alpha: 0.3),
+        borderRadius: TutorialsTheme.cardBorderRadiusShape,
+        border: Border.fromBorderSide(
+          BorderSide(color: TutorialsTheme.placeholderBorderColor),
         ),
       ),
       child: Column(
@@ -206,13 +206,13 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
           Icon(
             leaf.placeholderIcon ?? Icons.image,
             size: TutorialsTheme.placeholderIconSize,
-            color: TutorialsTheme.accentColor.withValues(alpha: 0.6),
+            color: TutorialsTheme.placeholderIconColor,
           ),
           const SizedBox(height: 12),
           Text(
             'Media coming soon',
             style: TutorialsTheme.bodyStyle.copyWith(
-              color: TutorialsTheme.textSecondary.withValues(alpha: 0.6),
+              color: TutorialsTheme.placeholderTextColor,
               fontSize: 14,
             ),
           ),
@@ -224,7 +224,7 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
   Widget _buildVideoArea() {
     if (leaf.videoUrl != null) {
       return ClipRRect(
-        borderRadius: BorderRadius.circular(TutorialsTheme.cardBorderRadius),
+        borderRadius: TutorialsTheme.cardBorderRadiusShape,
         child: SizedBox(
           width: double.infinity,
           height: 240,
@@ -241,7 +241,7 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
   Widget _buildPortraitVideoArea() {
     if (leaf.videoUrl != null) {
       return ClipRRect(
-        borderRadius: BorderRadius.circular(TutorialsTheme.cardBorderRadius),
+        borderRadius: TutorialsTheme.cardBorderRadiusShape,
         child: SizedBox(
           width: double.infinity,
           height: 300,
@@ -259,7 +259,7 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
   Widget _buildGifArea() {
     if (leaf.gifPath != null) {
       return ClipRRect(
-        borderRadius: BorderRadius.circular(TutorialsTheme.cardBorderRadius),
+        borderRadius: TutorialsTheme.cardBorderRadiusShape,
         child: Image.asset(
           leaf.gifPath!,
           package: packageName,
@@ -327,16 +327,16 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Container(
+                const Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: SizedBox(
                     width: 6,
                     height: 6,
-                    decoration: BoxDecoration(
-                      color:
-                          TutorialsTheme.instructionDescriptionStyle.color ??
-                          Colors.white,
-                      shape: BoxShape.circle,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: TutorialsTheme.bulletColor,
+                        shape: BoxShape.circle,
+                      ),
                     ),
                   ),
                 ),

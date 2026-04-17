@@ -171,6 +171,23 @@ class TutorialsTheme {
   static const double mediaMaxWidth = 600.0;
   static const double contentMaxWidth = 600.0;
 
+  // Precomputed const shapes — use these in place of BorderRadius.circular(...)
+  // so widgets that embed them can themselves be const.
+  static const BorderRadius cardBorderRadiusShape = BorderRadius.all(
+    Radius.circular(cardBorderRadius),
+  );
+  static const BorderRadius buttonBorderRadiusShape = BorderRadius.all(
+    Radius.circular(buttonBorderRadius),
+  );
+
+  // Precomputed faded colors — static so they can be used in const contexts
+  // (Color.withValues(...) is not a const expression).
+  static const Color placeholderBorderColor = Color.fromRGBO(72, 53, 135, 0.3);
+  static const Color placeholderIconColor = Color.fromRGBO(91, 32, 128, 0.6);
+  static const Color placeholderTextColor = Color.fromRGBO(219, 225, 255, 0.6);
+  static const Color bulletColor = textSecondary;
+  static const Color scrollDownButtonColor = Color.fromRGBO(91, 32, 128, 0.8);
+
   // Durations
   static const Duration pageTransitionDuration = Duration(milliseconds: 400);
   static const Duration entryAnimationDuration = Duration(milliseconds: 500);

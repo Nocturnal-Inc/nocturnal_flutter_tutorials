@@ -64,9 +64,9 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   }
 
   Widget _buildErrorWidget() {
-    return Container(
+    return const ColoredBox(
       color: TutorialsTheme.surfaceColor,
-      child: const Center(
+      child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -101,9 +101,9 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
     if (_chewieController == null ||
         !_videoPlayerController.value.isInitialized) {
-      return Container(
+      return const ColoredBox(
         color: TutorialsTheme.surfaceColor,
-        child: const Center(
+        child: Center(
           child: CircularProgressIndicator(
             color: TutorialsTheme.accentColor,
           ),
