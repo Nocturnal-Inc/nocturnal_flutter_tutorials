@@ -200,10 +200,6 @@ class TutorialContent {
               instructionContent: DetailedInstructions(
                 points: [
                   InstructionPoint(
-                    headline: 'Unpacking the Hydrogels',
-                    description: "Remove 4 hydrogels from the container.",
-                  ),
-                  InstructionPoint(
                     headline: 'Installation',
                     description:
                         "Pick up a hydrogel and insert it at a slight angle into one of the four divots in the earloop.",
@@ -217,26 +213,10 @@ class TutorialContent {
                     headline: 'Repetition',
                     description: "Repeat for all four hydrogels.",
                   ),
-                ],
-              ),
-            ),
-          ),
-          TutorialPage(
-            LeafPage(
-              title: 'Hydrogel Maintenance',
-              contentType: ContentType.video,
-              videoUrl: 'assets/videos/onboarding/hydrogels_case.mp4',
-              isScrollable: false,
-              instructionContent: DetailedInstructions(
-                points: [
                   InstructionPoint(
-                    headline: 'Remove Hydrogels',
-                    description: 'Remove the hydrogels from the earloops.',
-                  ),
-                  InstructionPoint(
-                    headline: 'Maintenance',
+                    headline: 'Life cycle',
                     description:
-                        'Hydrogels require hydration for optimal performance. New hydrogels are hydrated and ready to use. To rehydrate the hydrogels, store them in the container submerged in the saline solution, when not in use. We recommend rehydration every 1–2 days for best performance.',
+                        "Replace the hydrogels with a new set once every 30 days.",
                   ),
                 ],
               ),
