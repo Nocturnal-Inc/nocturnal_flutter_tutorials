@@ -1,0 +1,16 @@
+name: tutorial_book_example
+description: "Runnable demo of the tutorial engine, building its own content."
+publish_to: "none"
+version: 1.0.0
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  nocturnal_flutter_tutorials:
+    path: ../
+
+flutter:
+  uses-material-design: true

@@ -35,9 +35,8 @@ class AmoebaPainter extends CustomPainter {
 
     for (int i = 0; i <= numPoints; i++) {
       final angle = (2 * pi * i / numPoints);
-      final radiusVariation = sin(
-                animationValue * 2 * pi + angle * 2 + phaseOffset,
-              ) *
+      final radiusVariation =
+          sin(animationValue * 2 * pi + angle * 2 + phaseOffset) *
               baseRadius *
               0.2 +
           cos(animationValue * 2 * pi * 1.5 + angle * 3 + phaseOffset) *
@@ -54,7 +53,8 @@ class AmoebaPainter extends CustomPainter {
         // Use quadratic bezier for smooth organic curves
         final prevAngle = (2 * pi * (i - 1) / numPoints);
         final midAngle = (prevAngle + angle) / 2;
-        final controlRadius = baseRadius * 1.15 +
+        final controlRadius =
+            baseRadius * 1.15 +
             sin(animationValue * 2 * pi * 0.7 + midAngle + phaseOffset) *
                 baseRadius *
                 0.15;

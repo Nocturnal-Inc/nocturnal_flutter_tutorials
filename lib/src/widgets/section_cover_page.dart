@@ -6,9 +6,8 @@ import 'package:nocturnal_flutter_tutorials/src/theme/tutorials_theme.dart';
 /// A full-page widget that displays a section's title and subtitle.
 class SectionCoverPage extends StatelessWidget {
   final GroupPage group;
-  final String? packageName;
 
-  const SectionCoverPage({super.key, required this.group, this.packageName});
+  const SectionCoverPage({super.key, required this.group});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +46,6 @@ class SectionCoverPage extends StatelessWidget {
                         ),
                         child: Image.asset(
                           group.imagePath!,
-                          package: packageName,
                           width: double.infinity,
                           fit: BoxFit.contain,
                         ),

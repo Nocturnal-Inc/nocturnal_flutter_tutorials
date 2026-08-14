@@ -3,7 +3,11 @@ class InstructionPoint {
   final String description;
   final String? tip;
 
-  const InstructionPoint({required this.headline, required this.description, this.tip});
+  const InstructionPoint({
+    required this.headline,
+    required this.description,
+    this.tip,
+  });
 }
 
 sealed class InstructionContent {

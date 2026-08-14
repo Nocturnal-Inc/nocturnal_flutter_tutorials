@@ -1,17 +1,24 @@
-/// Nocturnal Onboarding Module
+/// Tutorial Book
 ///
-/// A Flutter onboarding flow for the Nocturnal device, including a welcome
-/// screen with animated background and a multi-page tutorial book.
+/// A reusable, content-agnostic tutorial engine: an optional welcome screen
+/// followed by a swipeable book of section covers and content pages.
+///
+/// The client owns the content. Build a `List<TutorialPage>` from [GroupPage]
+/// and [LeafPage] and hand it to [TutorialBook] — this package ships no
+/// copy and no assets of its own.
 library;
 
-export 'package:nocturnal_flutter_tutorials/src/models/section_type.dart';
-export 'package:nocturnal_flutter_tutorials/src/widgets/nocturnal_onboarding_widget.dart';
-export 'package:nocturnal_flutter_tutorials/src/screens/welcome_screen.dart';
-export 'package:nocturnal_flutter_tutorials/src/screens/tutorial_book.dart';
+// Data model — the blueprint clients build their tutorials from.
+export 'package:nocturnal_flutter_tutorials/src/models/tutorial_section.dart';
 export 'package:nocturnal_flutter_tutorials/src/models/tutorial_page.dart';
 export 'package:nocturnal_flutter_tutorials/src/models/instruction_point.dart';
-export 'package:nocturnal_flutter_tutorials/src/models/tutorial_content.dart';
+
+// The engine.
+export 'package:nocturnal_flutter_tutorials/src/widgets/tutorial_book.dart';
+
+// Reusable primitives.
+export 'package:nocturnal_flutter_tutorials/src/widgets/amoeba_background.dart';
+export 'package:nocturnal_flutter_tutorials/src/widgets/video_player_widget.dart';
+
+// Default theme (still Nocturnal-branded; parameterized in a later phase).
 export 'package:nocturnal_flutter_tutorials/src/theme/tutorials_theme.dart';
-export 'package:nocturnal_flutter_tutorials/src/widgets/connect_to_mask_widget.dart';
-export 'package:nocturnal_flutter_tutorials/src/widgets/experience_optimization_widget.dart';
-export 'package:nocturnal_flutter_tutorials/src/widgets/nocturnal_tutorial.dart';

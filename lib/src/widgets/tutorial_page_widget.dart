@@ -7,9 +7,8 @@ import 'package:nocturnal_flutter_tutorials/src/widgets/video_player_widget.dart
 
 class TutorialPageWidget extends StatefulWidget {
   final LeafPage leaf;
-  final String? packageName;
 
-  const TutorialPageWidget({super.key, required this.leaf, this.packageName});
+  const TutorialPageWidget({super.key, required this.leaf});
 
   @override
   State<TutorialPageWidget> createState() => _TutorialPageWidgetState();
@@ -17,7 +16,6 @@ class TutorialPageWidget extends StatefulWidget {
 
 class _TutorialPageWidgetState extends State<TutorialPageWidget> {
   LeafPage get leaf => widget.leaf;
-  String? get packageName => widget.packageName;
 
   ScrollController? _scrollController;
   bool _isAtBottom = false;
@@ -179,7 +177,6 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
         borderRadius: TutorialsTheme.cardBorderRadiusShape,
         child: Image.asset(
           leaf.imagePath!,
-          package: packageName,
           width: double.infinity,
           fit: BoxFit.contain,
           errorBuilder: (_, __, ___) => _buildPlaceholder(),
@@ -230,7 +227,9 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
           height: 240,
           child: VideoPlayerWidget(
             videoUrl: leaf.videoUrl!,
-            packageName: packageName,
+            enableAudio: leaf.enableAudio,
+            allowFullScreenLandscape: leaf.allowFullScreenLandscape,
+            showVideoControls: leaf.showVideoControls,
           ),
         ),
       );
@@ -248,7 +247,9 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
           child: VideoPlayerWidget(
             videoUrl: leaf.videoUrl!,
             aspectRatio: 9 / 16,
-            packageName: packageName,
+            enableAudio: leaf.enableAudio,
+            allowFullScreenLandscape: leaf.allowFullScreenLandscape,
+            showVideoControls: leaf.showVideoControls,
           ),
         ),
       );
@@ -262,7 +263,6 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
         borderRadius: TutorialsTheme.cardBorderRadiusShape,
         child: Image.asset(
           leaf.gifPath!,
-          package: packageName,
           width: double.infinity,
           fit: BoxFit.contain,
           errorBuilder: (_, __, ___) => _buildPlaceholder(),
