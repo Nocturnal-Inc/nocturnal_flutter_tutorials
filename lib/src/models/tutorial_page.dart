@@ -39,6 +39,8 @@ class LeafPage extends TutorialPageType {
   final IconData? placeholderIcon;
   final bool isScrollable;
   final String? footerText;
+  final bool? autoPlay;
+  final bool? looping;
 
   /// Whether this page's video plays with sound. Defaults to false — tutorial
   /// videos are silent unless the clip carries narration worth hearing.
@@ -71,6 +73,8 @@ class LeafPage extends TutorialPageType {
     this.videoUrl,
     this.gifPath,
     this.placeholderIcon,
+    this.autoPlay,
+    this.looping,
     this.isScrollable = false,
     this.footerText,
     this.enableAudio = false,

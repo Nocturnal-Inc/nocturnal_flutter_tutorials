@@ -291,6 +291,8 @@ void main() {
       videoUrl: 'assets/videos/nonexistent.mp4',
       instructionContent: const BulletPoints(bullets: ['x']),
       enableAudio: audio,
+      looping: true,
+      autoPlay: true,
     );
 
     testWidgets('defaults to silent', (tester) async {
@@ -338,6 +340,8 @@ void main() {
       videoUrl: 'assets/videos/nonexistent.mp4',
       instructionContent: const BulletPoints(bullets: ['x']),
       allowFullScreenLandscape: landscape,
+      looping: true,
+      autoPlay: true,
     );
 
     testWidgets('defaults to portrait-locked', (tester) async {
@@ -389,6 +393,8 @@ void main() {
       videoUrl: 'assets/videos/nonexistent.mp4',
       instructionContent: const BulletPoints(bullets: ['x']),
       showVideoControls: controls ?? true,
+      looping: true,
+      autoPlay: true,
     );
 
     testWidgets('defaults to controls shown', (tester) async {

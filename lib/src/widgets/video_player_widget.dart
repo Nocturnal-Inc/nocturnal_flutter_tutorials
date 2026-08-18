@@ -32,8 +32,8 @@ class VideoPlayerWidget extends StatefulWidget {
   const VideoPlayerWidget({
     super.key,
     required this.videoUrl,
-    this.autoPlay = true,
-    this.looping = true,
+    required this.autoPlay,
+    required this.looping,
     this.aspectRatio = 16 / 9,
     this.enableAudio = false,
     this.allowFullScreenLandscape = false,

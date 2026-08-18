@@ -230,6 +230,8 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
             enableAudio: leaf.enableAudio,
             allowFullScreenLandscape: leaf.allowFullScreenLandscape,
             showVideoControls: leaf.showVideoControls,
+            looping: leaf.looping!,
+            autoPlay: leaf.autoPlay!,
           ),
         ),
       );
@@ -250,6 +252,8 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
             enableAudio: leaf.enableAudio,
             allowFullScreenLandscape: leaf.allowFullScreenLandscape,
             showVideoControls: leaf.showVideoControls,
+            looping: leaf.looping!,
+            autoPlay: leaf.autoPlay!,
           ),
         ),
       );
