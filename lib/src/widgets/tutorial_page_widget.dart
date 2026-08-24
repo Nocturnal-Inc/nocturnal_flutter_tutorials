@@ -230,8 +230,8 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
             enableAudio: leaf.enableAudio,
             allowFullScreenLandscape: leaf.allowFullScreenLandscape,
             showVideoControls: leaf.showVideoControls,
-            looping: leaf.looping!,
-            autoPlay: leaf.autoPlay!,
+            looping: leaf.looping,
+            autoPlay: leaf.autoPlay,
           ),
         ),
       );
@@ -252,8 +252,8 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
             enableAudio: leaf.enableAudio,
             allowFullScreenLandscape: leaf.allowFullScreenLandscape,
             showVideoControls: leaf.showVideoControls,
-            looping: leaf.looping!,
-            autoPlay: leaf.autoPlay!,
+            looping: leaf.looping,
+            autoPlay: leaf.autoPlay,
           ),
         ),
       );
@@ -294,71 +294,99 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
         children: [
           for (int i = 0; i < points.length; i++) ...[
             if (i > 0) const SizedBox(height: 28),
-            SizedBox(
-              width: double.infinity,
-              child: Column(
-                children: [
-                  Text(
-                    points[i].headline,
-                    style: TutorialsTheme.instructionHeadlineStyle,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    points[i].description,
-                    style: TutorialsTheme.instructionDescriptionStyle,
-                    textAlign: TextAlign.center,
-                  ),
-                  if (points[i].tip != null) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      points[i].tip!,
-                      style: TutorialsTheme.instructionDescriptionStyle
-                          .copyWith(fontStyle: FontStyle.italic, fontSize: 12),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ],
-              ),
-            ),
+            switch (points[i]) {
+              final InstructionPoint point => _buildPoint(point),
+              BulletPoints(:final bullets) => _buildBullets(bullets),
+            },
           ],
         ],
       ),
-      BulletPoints(:final bullets) => Column(
-        children: [
-          for (int i = 0; i < bullets.length; i++) ...[
-            if (i > 0) const SizedBox(height: 28),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 8),
-                  child: SizedBox(
-                    width: 6,
-                    height: 6,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: TutorialsTheme.bulletColor,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    bullets[i],
-                    style: TutorialsTheme.instructionDescriptionStyle.copyWith(
-                      fontSize: 16,
-                    ),
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ],
-      ),
+      BulletPoints(:final bullets) => _buildBullets(bullets),
     };
+  }
+
+  Widget _buildPoint(InstructionPoint point) {
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        children: [
+          if (point.headline != null)
+            Text(
+              point.headline!,
+              style: TutorialsTheme.instructionHeadlineStyle,
+              textAlign: TextAlign.center,
+            ),
+          if (point.description != null) ...[
+            if (point.headline != null) const SizedBox(height: 4),
+            Text(
+              point.description!,
+              style: TutorialsTheme.instructionDescriptionStyle,
+              textAlign: TextAlign.center,
+            ),
+          ],
+          if (point.tip != null) ...[
+            if (point.headline != null || point.description != null)
+              const SizedBox(height: 4),
+            Text(
+              point.tip!,
+              style: TutorialsTheme.instructionDescriptionStyle.copyWith(
+                fontStyle: FontStyle.italic,
+                fontSize: 12,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// Shared by standalone and nested bullet lists; 12px apart, tighter than the 28px between items.
+  Widget _buildBullets(List<Bullet> bullets) {
+    const style = TutorialsTheme.instructionDescriptionStyle;
+    return Column(
+      children: [
+        for (int i = 0; i < bullets.length; i++) ...[
+          if (i > 0) const SizedBox(height: 12),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Nudges the 6px dot onto the cap-height of the first line (14px text, 1.5 line-height).
+              const Padding(
+                padding: EdgeInsets.only(top: 7),
+                child: SizedBox(
+                  width: 6,
+                  height: 6,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: TutorialsTheme.bulletColor,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      if (bullets[i].label != null)
+                        TextSpan(
+                          text: "${bullets[i].label}: ",
+                          // w600, not bold: Poppins ships only 400/600, so w700 silently falls back.
+                          style: style.copyWith(fontWeight: FontWeight.w600),
+                        ),
+                      TextSpan(text: bullets[i].text),
+                    ],
+                  ),
+                  style: style,
+                  textAlign: TextAlign.left,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ],
+    );
   }
 }

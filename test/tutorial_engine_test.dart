@@ -18,7 +18,7 @@ import 'package:nocturnal_flutter_tutorials/src/widgets/tutorial_page_widget.dar
 LeafPage textLeaf(String title, {List<String>? bullets}) => LeafPage(
   title: title,
   contentType: ContentType.text,
-  instructionContent: BulletPoints(bullets: bullets ?? const ['a bullet']),
+  instructionContent: BulletPoints.text(bullets ?? const ['a bullet']),
 );
 
 LeafPage detailedLeaf(String title) => LeafPage(
@@ -39,7 +39,7 @@ LeafPage detailedLeaf(String title) => LeafPage(
 LeafPage placeholderLeaf(String title) => LeafPage(
   title: title,
   contentType: ContentType.textAndImage,
-  instructionContent: const BulletPoints(bullets: ['x']),
+  instructionContent: BulletPoints.text(['x']),
   placeholderIcon: Icons.star,
 );
 
@@ -289,10 +289,8 @@ void main() {
       title: 'V',
       contentType: type,
       videoUrl: 'assets/videos/nonexistent.mp4',
-      instructionContent: const BulletPoints(bullets: ['x']),
+      instructionContent: BulletPoints.text(['x']),
       enableAudio: audio,
-      looping: true,
-      autoPlay: true,
     );
 
     testWidgets('defaults to silent', (tester) async {
@@ -338,10 +336,8 @@ void main() {
       title: 'V',
       contentType: type,
       videoUrl: 'assets/videos/nonexistent.mp4',
-      instructionContent: const BulletPoints(bullets: ['x']),
+      instructionContent: BulletPoints.text(['x']),
       allowFullScreenLandscape: landscape,
-      looping: true,
-      autoPlay: true,
     );
 
     testWidgets('defaults to portrait-locked', (tester) async {
@@ -391,10 +387,8 @@ void main() {
       title: 'V',
       contentType: type,
       videoUrl: 'assets/videos/nonexistent.mp4',
-      instructionContent: const BulletPoints(bullets: ['x']),
+      instructionContent: BulletPoints.text(['x']),
       showVideoControls: controls ?? true,
-      looping: true,
-      autoPlay: true,
     );
 
     testWidgets('defaults to controls shown', (tester) async {
@@ -428,6 +422,58 @@ void main() {
           find.byType(VideoPlayerWidget),
         );
         expect(w.showVideoControls, isFalse, reason: '$type dropped the flag');
+      });
+    }
+  });
+
+  group('video flag defaults', () {
+    // Regression: autoPlay/looping were briefly nullable with no default and
+    // force-unwrapped in _buildVideoArea, so ANY page that omitted them — which
+    // is how every real page is written — threw "Null check operator used on a
+    // null value" the moment it rendered. This helper deliberately omits both.
+    LeafPage videoLeaf(ContentType type) => LeafPage(
+      title: 'V',
+      contentType: type,
+      videoUrl: 'assets/videos/nonexistent.mp4',
+      instructionContent: BulletPoints.text(['x']),
+    );
+
+    // ContentType.mixed matters here: it reaches the same code through
+    // _buildMixedArea -> _buildVideoArea, so it breaks without ever naming the
+    // flags — the path a grep for 'looping' would miss.
+    for (final type in [
+      ContentType.video,
+      ContentType.portraitVideo,
+      ContentType.mixed,
+    ]) {
+      testWidgets('$type renders when both flags are omitted', (tester) async {
+        await pumpEngine(
+          tester,
+          TutorialBook(
+            pages: [TutorialPage(videoLeaf(type))],
+            showWelcomeScreen: false,
+          ),
+        );
+        expect(
+          tester.takeException(),
+          isNull,
+          reason: '$type threw when autoPlay/looping were left unset',
+        );
+      });
+
+      testWidgets('$type defaults to autoplay + looping', (tester) async {
+        await pumpEngine(
+          tester,
+          TutorialBook(
+            pages: [TutorialPage(videoLeaf(type))],
+            showWelcomeScreen: false,
+          ),
+        );
+        final w = tester.widget<VideoPlayerWidget>(
+          find.byType(VideoPlayerWidget),
+        );
+        expect(w.autoPlay, isTrue, reason: '$type lost the autoPlay default');
+        expect(w.looping, isTrue, reason: '$type lost the looping default');
       });
     }
   });

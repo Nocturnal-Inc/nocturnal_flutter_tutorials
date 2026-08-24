@@ -39,8 +39,18 @@ class LeafPage extends TutorialPageType {
   final IconData? placeholderIcon;
   final bool isScrollable;
   final String? footerText;
-  final bool? autoPlay;
-  final bool? looping;
+
+  /// Whether the video starts playing as soon as the page appears.
+  ///
+  /// Defaults to true — tutorial clips play on arrival rather than waiting for
+  /// a tap.
+  final bool autoPlay;
+
+  /// Whether the video repeats when it reaches the end.
+  ///
+  /// Defaults to true — tutorial clips are short, so looping keeps the step
+  /// demonstrated for as long as the page is open.
+  final bool looping;
 
   /// Whether this page's video plays with sound. Defaults to false — tutorial
   /// videos are silent unless the clip carries narration worth hearing.
@@ -73,8 +83,8 @@ class LeafPage extends TutorialPageType {
     this.videoUrl,
     this.gifPath,
     this.placeholderIcon,
-    this.autoPlay,
-    this.looping,
+    this.autoPlay = true,
+    this.looping = true,
     this.isScrollable = false,
     this.footerText,
     this.enableAudio = false,

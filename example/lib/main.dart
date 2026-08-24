@@ -19,12 +19,10 @@ final List<TutorialPage> demoPages = [
     LeafPage(
       title: 'Welcome',
       contentType: ContentType.text,
-      instructionContent: const BulletPoints(
-        bullets: [
+      instructionContent: BulletPoints.text([
           'This tutorial is built by the app, not the package.',
           'Swipe to move between pages.',
-        ],
-      ),
+        ]),
     ),
   ),
   TutorialPage(
@@ -49,9 +47,7 @@ final List<TutorialPage> demoPages = [
           title: 'Media placeholder',
           contentType: ContentType.textAndImage,
           placeholderIcon: Icons.image_outlined,
-          instructionContent: const BulletPoints(
-            bullets: ['Supply imagePath / videoUrl / gifPath to show media.'],
-          ),
+          instructionContent: BulletPoints.text(['Supply imagePath / videoUrl / gifPath to show media.']),
         ),
       ],
     ),
