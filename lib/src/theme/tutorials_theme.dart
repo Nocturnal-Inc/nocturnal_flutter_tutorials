@@ -188,6 +188,20 @@ class TutorialsTheme {
   static const Color bulletColor = textSecondary;
   static const Color scrollDownButtonColor = Color.fromRGBO(91, 32, 128, 0.8);
 
+  // Navigation arrows — the violet of the scroll-down chevron, but named
+  // separately so the two can diverge without disturbing each other.
+  //
+  // Kept fully opaque: [navArrowOpacity] is the single place the fade is
+  // applied, so the circle and the glyph land at the same strength. Baking
+  // alpha in here too would multiply with it and darken the circle relative
+  // to the arrow.
+  static const Color navArrowColor = Color.fromRGBO(91, 32, 128, 1.0);
+  static const double navArrowSize = 44.0;
+
+  /// Applied to the whole arrow button — circle and glyph together — so the
+  /// control recedes against the page instead of competing with it.
+  static const double navArrowOpacity = 0.5;
+
   // Durations
   static const Duration pageTransitionDuration = Duration(milliseconds: 400);
   static const Duration entryAnimationDuration = Duration(milliseconds: 500);

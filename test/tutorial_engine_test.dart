@@ -477,4 +477,129 @@ void main() {
       });
     }
   });
+
+  group('navigation arrows', () {
+    // Three pages, so there is a middle page with both arrows showing.
+    List<TutorialPage> threePages() => [
+      TutorialPage(textLeaf('Page One')),
+      TutorialPage(textLeaf('Page Two')),
+      TutorialPage(textLeaf('Page Three')),
+    ];
+
+    /// Clears the 400ms page transition without settling — `pumpAndSettle`
+    /// deadlocks on the forever-repeating amoeba background.
+    ///
+    /// The bare pump first is load-bearing: `animateToPage` needs one frame to
+    /// register the animation before the clock is advanced past it.
+    ///
+    /// The trailing second drains the incoming page's entry animation: those
+    /// use `flutter_animate` delays backed by real timers, and a timer still
+    /// pending when the tree is torn down fails the test.
+    Future<void> settlePage(WidgetTester tester) async {
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(seconds: 1));
+    }
+
+    testWidgets('shown by default, with no back arrow on the first page', (
+      tester,
+    ) async {
+      await pumpEngine(
+        tester,
+        TutorialBook(pages: threePages(), showWelcomeScreen: false),
+      );
+
+      expect(find.byIcon(Icons.arrow_forward_ios), findsOneWidget);
+      expect(find.byIcon(Icons.arrow_back_ios_new), findsNothing);
+    });
+
+    testWidgets('the forward arrow advances a page', (tester) async {
+      await pumpEngine(
+        tester,
+        TutorialBook(pages: threePages(), showWelcomeScreen: false),
+      );
+
+      await tester.tap(find.byIcon(Icons.arrow_forward_ios));
+      await settlePage(tester);
+
+      expect(find.text('Page Two'), findsOneWidget);
+      // The middle page has somewhere to go in both directions.
+      expect(find.byIcon(Icons.arrow_back_ios_new), findsOneWidget);
+    });
+
+    testWidgets('the back arrow returns to the previous page', (tester) async {
+      await pumpEngine(
+        tester,
+        TutorialBook(pages: threePages(), showWelcomeScreen: false),
+      );
+
+      await tester.tap(find.byIcon(Icons.arrow_forward_ios));
+      await settlePage(tester);
+      expect(find.text('Page Two'), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.arrow_back_ios_new));
+      await settlePage(tester);
+
+      expect(find.text('Page One'), findsOneWidget);
+    });
+
+    testWidgets('the forward arrow is gone on the last page, Finish is not', (
+      tester,
+    ) async {
+      await pumpEngine(
+        tester,
+        TutorialBook(
+          pages: threePages(),
+          showWelcomeScreen: false,
+          finishLabel: 'Done',
+        ),
+      );
+
+      await tester.tap(find.byIcon(Icons.arrow_forward_ios));
+      await settlePage(tester);
+      await tester.tap(find.byIcon(Icons.arrow_forward_ios));
+      await settlePage(tester);
+
+      expect(find.text('Page Three'), findsOneWidget);
+      expect(find.byIcon(Icons.arrow_forward_ios), findsNothing);
+      expect(find.byIcon(Icons.arrow_back_ios_new), findsOneWidget);
+      expect(find.text('Done'), findsOneWidget);
+    });
+
+    // The flag is opt-OUT, so the default case above would still pass with the
+    // wiring deleted. This is the assertion that pins it.
+    testWidgets('showNavigationArrows: false hides both arrows', (
+      tester,
+    ) async {
+      await pumpEngine(
+        tester,
+        TutorialBook(
+          pages: threePages(),
+          showWelcomeScreen: false,
+          showNavigationArrows: false,
+        ),
+      );
+
+      expect(find.byIcon(Icons.arrow_forward_ios), findsNothing);
+      expect(find.byIcon(Icons.arrow_back_ios_new), findsNothing);
+    });
+
+    testWidgets('arrows coexist with drag-to-scrub on the dots', (
+      tester,
+    ) async {
+      await pumpEngine(
+        tester,
+        TutorialBook(
+          pages: threePages(),
+          showWelcomeScreen: false,
+          enableDragToScrub: true,
+        ),
+      );
+
+      await tester.tap(find.byIcon(Icons.arrow_forward_ios));
+      await settlePage(tester);
+
+      expect(find.text('Page Two'), findsOneWidget);
+    });
+  });
 }

@@ -113,6 +113,13 @@ lifts the portrait lock only while such a page is mounted and restores it on
 dispose. Portrait (9:16) clips letterbox heavily in fullscreen landscape, so
 leaving `portraitVideo` pages opted out is usually right.
 
+`TutorialBook.showNavigationArrows` puts previous/next arrow buttons on either
+side of the dot indicator. It defaults to **true**, so like `showVideoControls`
+it is opt-OUT: set it `false` for a book that should be swipe-only. The arrows
+render at the screen level, so section covers get them as well as content pages.
+At the ends of the book the unavailable arrow becomes an equal-width spacer
+rather than disappearing, which keeps the dots centred as you page through.
+
 `GroupPage.children` is typed `List<LeafPage>`: a section cannot contain another
 section. That's deliberate — the flattener previously downcast and crashed at
 runtime on nested groups.

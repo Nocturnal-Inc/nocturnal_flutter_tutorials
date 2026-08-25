@@ -21,7 +21,7 @@ final List<TutorialPage> demoPages = [
       contentType: ContentType.text,
       instructionContent: BulletPoints.text([
           'This tutorial is built by the app, not the package.',
-          'Swipe to move between pages.',
+          'Swipe or use the arrows below to move between pages.',
         ]),
     ),
   ),

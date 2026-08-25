@@ -53,6 +53,10 @@ class TutorialBook extends StatelessWidget {
   /// Only applies when pages contain [GroupPage] entries.
   final bool showSectionLabel;
 
+  /// Whether to show previous/next arrow buttons flanking the dot indicator.
+  /// Defaults to `true` — set `false` to rely on swiping alone.
+  final bool showNavigationArrows;
+
   /// Label for the finish button shown on the last page.
   final String finishLabel;
 
@@ -84,6 +88,7 @@ class TutorialBook extends StatelessWidget {
     this.showRestartButton = false,
     this.enableDragToScrub = false,
     this.showSectionLabel = false,
+    this.showNavigationArrows = true,
     this.finishLabel = 'Finish',
     this.onComplete,
     this.onSkip,
@@ -97,6 +102,7 @@ class TutorialBook extends StatelessWidget {
         showRestartButton: showRestartButton,
         enableDragToScrub: enableDragToScrub,
         showSectionLabel: showSectionLabel,
+        showNavigationArrows: showNavigationArrows,
         finishLabel: finishLabel,
         onComplete: onComplete,
         onSkip: onSkip,
@@ -114,6 +120,7 @@ class TutorialBook extends StatelessWidget {
         showRestartButton: showRestartButton,
         enableDragToScrub: enableDragToScrub,
         showSectionLabel: showSectionLabel,
+        showNavigationArrows: showNavigationArrows,
         finishLabel: finishLabel,
         onComplete: onComplete,
         onSkip: onSkip,
@@ -258,6 +265,7 @@ class _TutorialBookScreen extends StatefulWidget {
   final bool showRestartButton;
   final bool enableDragToScrub;
   final bool showSectionLabel;
+  final bool showNavigationArrows;
   final String finishLabel;
   final VoidCallback? onComplete;
   final VoidCallback? onSkip;
@@ -267,6 +275,7 @@ class _TutorialBookScreen extends StatefulWidget {
     required this.showRestartButton,
     required this.enableDragToScrub,
     required this.showSectionLabel,
+    required this.showNavigationArrows,
     required this.finishLabel,
     required this.onComplete,
     required this.onSkip,
@@ -315,6 +324,7 @@ class _TutorialBookScreenState extends State<_TutorialBookScreen> {
   bool get _isLastPage => _currentPage == _totalPages - 1;
 
   void _goToPage(int index) {
+    if (index < 0 || index >= _totalPages) return;
     _pageController.animateToPage(
       index,
       duration: TutorialsTheme.pageTransitionDuration,
@@ -462,49 +472,119 @@ class _TutorialBookScreenState extends State<_TutorialBookScreen> {
   Widget _buildBottomIndicator() {
     const double dotPitch = TutorialsTheme.dotSize + TutorialsTheme.dotSpacing;
 
-    final indicator = Padding(
-      padding: const EdgeInsets.only(bottom: 24, top: 8),
-      child: SmoothPageIndicator(
-        controller: _pageController,
-        count: _totalPages,
-        effect: ScrollingDotsEffect(
-          dotWidth: TutorialsTheme.dotSize,
-          dotHeight: TutorialsTheme.dotSize,
-          spacing: TutorialsTheme.dotSpacing,
-          activeDotColor: TutorialsTheme.dotActiveColor,
-          dotColor: TutorialsTheme.dotInactiveColor,
-        ),
-        onDotClicked: _goToPage,
+    Widget indicator = SmoothPageIndicator(
+      controller: _pageController,
+      count: _totalPages,
+      effect: ScrollingDotsEffect(
+        dotWidth: TutorialsTheme.dotSize,
+        dotHeight: TutorialsTheme.dotSize,
+        spacing: TutorialsTheme.dotSpacing,
+        activeDotColor: TutorialsTheme.dotActiveColor,
+        dotColor: TutorialsTheme.dotInactiveColor,
       ),
+      onDotClicked: _goToPage,
     );
 
-    if (!widget.enableDragToScrub) return indicator;
+    // The scrub gesture stays bound to the dots alone. Wrapping the whole row
+    // would put its horizontal drag recognizer in competition with the arrow
+    // taps sitting on either side.
+    if (widget.enableDragToScrub) {
+      indicator = GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onHorizontalDragStart: (_) {
+          _indicatorDragAccumulator = 0.0;
+        },
+        onHorizontalDragUpdate: (details) {
+          _indicatorDragAccumulator += details.delta.dx * _kDotScrubSensitivity;
 
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onHorizontalDragStart: (_) {
-        _indicatorDragAccumulator = 0.0;
-      },
-      onHorizontalDragUpdate: (details) {
-        _indicatorDragAccumulator += details.delta.dx * _kDotScrubSensitivity;
-
-        while (_indicatorDragAccumulator <= -dotPitch) {
-          _indicatorDragAccumulator += dotPitch;
-          final nextPage = _currentPage + 1;
-          if (nextPage < _totalPages) {
-            _goToPage(nextPage);
+          while (_indicatorDragAccumulator <= -dotPitch) {
+            _indicatorDragAccumulator += dotPitch;
+            final nextPage = _currentPage + 1;
+            if (nextPage < _totalPages) {
+              _goToPage(nextPage);
+            }
           }
-        }
 
-        while (_indicatorDragAccumulator >= dotPitch) {
-          _indicatorDragAccumulator -= dotPitch;
-          final prevPage = _currentPage - 1;
-          if (prevPage >= 0) {
-            _goToPage(prevPage);
+          while (_indicatorDragAccumulator >= dotPitch) {
+            _indicatorDragAccumulator -= dotPitch;
+            final prevPage = _currentPage - 1;
+            if (prevPage >= 0) {
+              _goToPage(prevPage);
+            }
           }
-        }
-      },
-      child: indicator,
+        },
+        child: indicator,
+      );
+    }
+
+    const padding = EdgeInsets.only(bottom: 24, top: 8);
+
+    if (!widget.showNavigationArrows) {
+      return Padding(padding: padding, child: indicator);
+    }
+
+    // Inset the row so the arrows sit off the screen edge, matching the
+    // horizontal rhythm of the top bar.
+    const rowPadding = EdgeInsets.fromLTRB(16, 8, 16, 24);
+
+    // Absent arrows leave an equal-width gap behind, which is what keeps the
+    // dots optically centred as the first and last pages come and go.
+    return Padding(
+      padding: rowPadding,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildNavArrow(
+            icon: Icons.arrow_back_ios_new,
+            semanticLabel: 'Previous page',
+            onTap: _currentPage > 0 ? () => _goToPage(_currentPage - 1) : null,
+          ),
+          Flexible(child: indicator),
+          _buildNavArrow(
+            icon: Icons.arrow_forward_ios,
+            semanticLabel: 'Next page',
+            onTap: _isLastPage ? null : () => _goToPage(_currentPage + 1),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// One circular arrow button, or an equal-width spacer when [onTap] is null
+  /// (the first page has no previous, the last page has no next).
+  Widget _buildNavArrow({
+    required IconData icon,
+    required String semanticLabel,
+    required VoidCallback? onTap,
+  }) {
+    const size = TutorialsTheme.navArrowSize;
+
+    if (onTap == null) {
+      return const SizedBox(width: size, height: size);
+    }
+
+    return Semantics(
+      button: true,
+      label: semanticLabel,
+      child: GestureDetector(
+        onTap: onTap,
+        // Opacity wraps the circle and the glyph together; fading only the
+        // circle colour would leave a full-strength white arrow on top.
+        child: Opacity(
+          opacity: TutorialsTheme.navArrowOpacity,
+          child: SizedBox(
+            width: size,
+            height: size,
+            child: DecoratedBox(
+              decoration: const BoxDecoration(
+                color: TutorialsTheme.navArrowColor,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: AppColors.white, size: 20),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
