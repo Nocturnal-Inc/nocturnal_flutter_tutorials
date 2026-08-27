@@ -198,6 +198,11 @@ class TutorialsTheme {
   static const Color navArrowColor = Color.fromRGBO(91, 32, 128, 1.0);
   static const double navArrowSize = 44.0;
 
+  /// The in-video replay button. Smaller than [navArrowSize] so it reads as a
+  /// media control rather than page navigation.
+  static const double rewatchButtonSize = 36.0;
+  static const double rewatchButtonIconSize = 18.0;
+
   /// Applied to the whole arrow button — circle and glyph together — so the
   /// control recedes against the page instead of competing with it.
   static const double navArrowOpacity = 0.5;

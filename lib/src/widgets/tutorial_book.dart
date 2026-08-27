@@ -6,6 +6,7 @@ import 'package:nocturnal_flutter_tutorials/src/theme/tutorials_theme.dart';
 import 'package:nocturnal_flutter_tutorials/src/widgets/amoeba_background.dart';
 import 'package:nocturnal_flutter_tutorials/src/widgets/section_cover_page.dart';
 import 'package:nocturnal_flutter_tutorials/src/widgets/tutorial_page_widget.dart';
+import 'package:nocturnal_flutter_tutorials/src/widgets/tutorial_restart_scope.dart';
 
 /// A fully configurable onboarding widget that encapsulates an optional welcome
 /// screen followed by a swipeable tutorial flow.
@@ -289,6 +290,10 @@ class _TutorialBookScreenState extends State<_TutorialBookScreen> {
   static const double _kDotScrubSensitivity = 2.0;
 
   late final PageController _pageController;
+
+  /// Pulsed by [_restart] so live pages rewind their videos and scroll offsets;
+  /// see [TutorialRestartScope].
+  final ValueNotifier<int> _restartTick = ValueNotifier<int>(0);
   int _currentPage = 0;
   double _indicatorDragAccumulator = 0.0;
 
@@ -318,6 +323,7 @@ class _TutorialBookScreenState extends State<_TutorialBookScreen> {
   @override
   void dispose() {
     _pageController.dispose();
+    _restartTick.dispose();
     super.dispose();
   }
 
@@ -341,10 +347,13 @@ class _TutorialBookScreenState extends State<_TutorialBookScreen> {
   }
 
   void _restart() {
+    // Tell the live pages to rewind before the animation starts, so page 0 is
+    // already back at frame 0 by the time it slides into view.
+    _restartTick.value++;
+    // No setState here: PageView.onPageChanged owns _currentPage. Setting it
+    // eagerly would flip _isLastPage false on the frame of the tap and yank
+    // this very button out of the tree mid-animation.
     _goToPage(0);
-    setState(() {
-      _currentPage = 0;
-    });
   }
 
   @override
@@ -358,25 +367,28 @@ class _TutorialBookScreenState extends State<_TutorialBookScreen> {
             children: [
               _buildTopBar(),
               Expanded(
-                child: PageView.builder(
-                  controller: _pageController,
-                  itemCount: _totalPages,
-                  onPageChanged: (index) {
-                    setState(() {
-                      _currentPage = index;
-                    });
-                  },
-                  itemBuilder: (context, index) {
-                    final entry = _entries[index];
-                    return switch (entry) {
-                      _SectionCoverEntry(:final group) => SectionCoverPage(
-                        group: group,
-                      ),
-                      _ContentPageEntry(:final leaf) => TutorialPageWidget(
-                        leaf: leaf,
-                      ),
-                    };
-                  },
+                child: TutorialRestartScope(
+                  restartTick: _restartTick,
+                  child: PageView.builder(
+                    controller: _pageController,
+                    itemCount: _totalPages,
+                    onPageChanged: (index) {
+                      setState(() {
+                        _currentPage = index;
+                      });
+                    },
+                    itemBuilder: (context, index) {
+                      final entry = _entries[index];
+                      return switch (entry) {
+                        _SectionCoverEntry(:final group) => SectionCoverPage(
+                          group: group,
+                        ),
+                        _ContentPageEntry(:final leaf) => TutorialPageWidget(
+                          leaf: leaf,
+                        ),
+                      };
+                    },
+                  ),
                 ),
               ),
               if (_isLastPage) ...[

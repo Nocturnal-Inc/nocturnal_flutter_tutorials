@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nocturnal_flutter_tutorials/nocturnal_flutter_tutorials.dart';
 import 'package:nocturnal_flutter_tutorials/src/widgets/section_cover_page.dart';
 import 'package:nocturnal_flutter_tutorials/src/widgets/tutorial_page_widget.dart';
+import 'package:nocturnal_flutter_tutorials/src/widgets/tutorial_restart_scope.dart';
 
 /// Engine tests driven by SYNTHETIC, non-Nocturnal content.
 ///
@@ -600,6 +601,173 @@ void main() {
       await settlePage(tester);
 
       expect(find.text('Page Two'), findsOneWidget);
+    });
+  });
+  group('restart button', () {
+    List<TutorialPage> twoPages() => [
+      TutorialPage(textLeaf('Page One')),
+      TutorialPage(textLeaf('Page Two')),
+    ];
+
+    /// Same rationale as the navigation-arrows helper: a bare frame to register
+    /// the animation, then past the transition, then past the entry animation.
+    Future<void> settlePage(WidgetTester tester) async {
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(seconds: 1));
+    }
+
+    Future<void> goToLastPage(WidgetTester tester) async {
+      await tester.tap(find.byIcon(Icons.arrow_forward_ios));
+      await settlePage(tester);
+    }
+
+    testWidgets('returns to the first page', (tester) async {
+      await pumpEngine(
+        tester,
+        TutorialBook(
+          pages: twoPages(),
+          showWelcomeScreen: false,
+          showRestartButton: true,
+        ),
+      );
+
+      await goToLastPage(tester);
+      expect(find.text('Page Two'), findsOneWidget);
+
+      await tester.tap(find.text('Restart'));
+      await settlePage(tester);
+
+      expect(find.text('Page One'), findsOneWidget);
+    });
+
+    testWidgets('stays on screen for the frame it is tapped', (tester) async {
+      // Regression: _restart used to setState(_currentPage = 0) synchronously,
+      // which flipped _isLastPage false and tore the button out of the tree
+      // under the user's finger — the tap read as doing nothing.
+      await pumpEngine(
+        tester,
+        TutorialBook(
+          pages: twoPages(),
+          showWelcomeScreen: false,
+          showRestartButton: true,
+        ),
+      );
+
+      await goToLastPage(tester);
+
+      await tester.tap(find.text('Restart'));
+      await tester.pump();
+
+      expect(find.text('Restart'), findsOneWidget);
+
+      await settlePage(tester);
+    });
+
+    testWidgets('broadcasts a restart tick to the live pages', (tester) async {
+      // The videos rewind by listening to this notifier; asserting on the
+      // signal keeps the test free of a platform video controller.
+      await pumpEngine(
+        tester,
+        TutorialBook(
+          pages: twoPages(),
+          showWelcomeScreen: false,
+          showRestartButton: true,
+        ),
+      );
+
+      await goToLastPage(tester);
+
+      final context = tester.element(find.byType(TutorialPageWidget).first);
+      final tick = TutorialRestartScope.maybeOf(context);
+      expect(tick, isNotNull);
+      final before = tick!.value;
+
+      await tester.tap(find.text('Restart'));
+      await settlePage(tester);
+
+      expect(tick.value, before + 1);
+    });
+
+    testWidgets('is absent by default', (tester) async {
+      await pumpEngine(
+        tester,
+        TutorialBook(pages: twoPages(), showWelcomeScreen: false),
+      );
+
+      await goToLastPage(tester);
+
+      expect(find.text('Restart'), findsNothing);
+    });
+  });
+  group('rewatch button', () {
+    // Defaults TRUE like showVideoControls, so forwarding tests pass FALSE —
+    // asserting the true case would pass even with the wiring deleted.
+    LeafPage videoLeaf(
+      ContentType type, {
+      bool? rewatch,
+      bool controls = true,
+    }) => LeafPage(
+      title: 'V',
+      contentType: type,
+      videoUrl: 'assets/videos/nonexistent.mp4',
+      instructionContent: BulletPoints.text(['x']),
+      showRewatchButton: rewatch ?? true,
+      showVideoControls: controls,
+    );
+
+    testWidgets('defaults to shown', (tester) async {
+      await pumpEngine(
+        tester,
+        TutorialBook(
+          pages: [TutorialPage(videoLeaf(ContentType.video))],
+          showWelcomeScreen: false,
+        ),
+      );
+      final w = tester.widget<VideoPlayerWidget>(
+        find.byType(VideoPlayerWidget),
+      );
+      expect(w.showRewatchButton, isTrue);
+    });
+
+    for (final type in [
+      ContentType.video,
+      ContentType.portraitVideo,
+      ContentType.mixed,
+    ]) {
+      testWidgets('$type forwards an explicit opt-out', (tester) async {
+        await pumpEngine(
+          tester,
+          TutorialBook(
+            pages: [TutorialPage(videoLeaf(type, rewatch: false))],
+            showWelcomeScreen: false,
+          ),
+        );
+        final w = tester.widget<VideoPlayerWidget>(
+          find.byType(VideoPlayerWidget),
+        );
+        expect(w.showRewatchButton, isFalse, reason: '$type dropped the flag');
+      });
+    }
+
+    testWidgets('survives showVideoControls: false', (tester) async {
+      // The whole point of owning this button rather than using Chewie's:
+      // Chewie's control layer — and its replay glyph with it — is not built
+      // at all when showControls is false.
+      await pumpEngine(
+        tester,
+        TutorialBook(
+          pages: [
+            TutorialPage(videoLeaf(ContentType.video, controls: false)),
+          ],
+          showWelcomeScreen: false,
+        ),
+      );
+      final w = tester.widget<VideoPlayerWidget>(
+        find.byType(VideoPlayerWidget),
+      );
+      expect(w.showVideoControls, isFalse);
+      expect(w.showRewatchButton, isTrue);
     });
   });
 }

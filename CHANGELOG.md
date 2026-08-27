@@ -4,6 +4,22 @@
 
 ### Added
 
+- **A rewatch button on videos.** `LeafPage` gains `showRewatchButton`
+  (default `true`), drawn as a small replay circle in the video's top-right
+  corner.
+
+  Chewie has a replay glyph of its own, but it is effectively unreachable on a
+  tutorial clip. It only appears once `position >= duration`, which a looping
+  video never stably reaches — so on a default page (`looping: true`) the
+  centre button is always play/pause, never replay. It also disappears entirely
+  under `showVideoControls: false`, along with the rest of Chewie's control
+  layer. This button is drawn by the package in `VideoPlayerWidget`'s own
+  `Stack`, above Chewie, so it is unaffected by both.
+
+  Tapping it always restarts from the first frame and plays, whatever
+  `autoPlay` and `looping` are set to — the viewer asking to rewatch is an
+  explicit request to start.
+
 - **Next/previous navigation arrows, on by default.** `TutorialBook` gains
   `showNavigationArrows`, which flanks the dot indicator with circular prev/next
   buttons. Swiping, tapping a dot and drag-to-scrub were the only ways to move
@@ -27,6 +43,40 @@
   colour is kept fully opaque so the two do not land at different strengths.
 
 ### Fixed
+
+- **The rewatch button now works on a clip that has played to the end.**
+  Seeking a finished `VideoPlayerController` back to zero and calling `play()`
+  left the video frozen on its last frame: `seekTo` reported success and
+  `isPlaying` flipped `true`, but the platform decoder stayed parked at
+  end-of-stream and the position never advanced off `0:00:00`.
+
+  This is a `video_player`/ExoPlayer behaviour rather than a Chewie one — it
+  reproduces with a bare `VideoPlayerController` and no Chewie in the tree, so
+  no wrapper package built on `video_player` would avoid it. `_rewind` now
+  detects the at-end case and rebuilds the controller instead of seeking it,
+  which is the only reliable way back. A clip that has *not* finished still
+  takes the cheap seek path, so the rebuild's brief loading state only appears
+  where it is unavoidable. Re-entry is guarded so a double tap cannot dispose a
+  controller that a still-running rebuild is about to hand back.
+
+  Note this only ever bit pages with `looping: false`: a looping clip never
+  reaches end-of-stream, so it never wedged.
+
+- **The `Restart` button now resets the videos it returns to.** `_restart` only
+  animated the `PageView` back to page 0. `PageView` keeps built pages alive, so
+  page 0's `VideoPlayerWidget` state was reused — `initState` never ran again
+  and nothing rewound the controller, leaving the clip parked wherever the
+  viewer had left it.
+
+  `TutorialBook` now broadcasts a restart signal through a new
+  `TutorialRestartScope`, which the live videos and scrollable pages listen to
+  in order to reset themselves.
+
+  The same method also called `setState(_currentPage = 0)` synchronously, which
+  flipped `_isLastPage` false on the frame of the tap and tore the Finish and
+  Restart buttons out of the tree mid-animation — the button vanished under the
+  user's finger. That eager `setState` is removed; `PageView.onPageChanged`
+  already owns `_currentPage`.
 
 - **Video pages no longer crash when `autoPlay`/`looping` are omitted.**
   `LeafPage.autoPlay` and `LeafPage.looping` were `bool?` with no constructor

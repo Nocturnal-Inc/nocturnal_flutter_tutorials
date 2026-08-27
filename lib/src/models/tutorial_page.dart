@@ -75,6 +75,15 @@ class LeafPage extends TutorialPageType {
   /// uninterrupted.
   final bool showVideoControls;
 
+  /// Whether this page's video shows a replay button in its top-right corner.
+  ///
+  /// Defaults to **true**, and is independent of [showVideoControls]: the
+  /// button is drawn by this package rather than by Chewie, so it stays
+  /// available on pages that hide the playback controls. Tapping it always
+  /// restarts the clip from the first frame and plays, whatever [autoPlay] and
+  /// [looping] are set to.
+  final bool showRewatchButton;
+
   const LeafPage({
     required this.title,
     required this.instructionContent,
@@ -90,6 +99,7 @@ class LeafPage extends TutorialPageType {
     this.enableAudio = false,
     this.allowFullScreenLandscape = false,
     this.showVideoControls = true,
+    this.showRewatchButton = true,
   });
 }
 

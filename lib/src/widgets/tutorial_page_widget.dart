@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:nocturnal_flutter_tutorials/src/models/instruction_point.dart';
 import 'package:nocturnal_flutter_tutorials/src/models/tutorial_page.dart';
 import 'package:nocturnal_flutter_tutorials/src/theme/tutorials_theme.dart';
+import 'package:nocturnal_flutter_tutorials/src/widgets/tutorial_restart_scope.dart';
 import 'package:nocturnal_flutter_tutorials/src/widgets/video_player_widget.dart';
 
 class TutorialPageWidget extends StatefulWidget {
@@ -20,6 +21,10 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
   ScrollController? _scrollController;
   bool _isAtBottom = false;
 
+  /// See [_VideoPlayerWidgetState] for the same pattern — the scroll offset
+  /// survives page reuse just as video position does.
+  ValueNotifier<int>? _restartTick;
+
   @override
   void initState() {
     super.initState();
@@ -30,7 +35,26 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final tick = TutorialRestartScope.maybeOf(context);
+    if (identical(tick, _restartTick)) return;
+    _restartTick?.removeListener(_handleRestart);
+    _restartTick = tick;
+    _restartTick?.addListener(_handleRestart);
+  }
+
+  /// Send a reused page back to the top; [PageView] keeps it alive, so it would
+  /// otherwise reopen wherever the viewer had scrolled to.
+  void _handleRestart() {
+    final controller = _scrollController;
+    if (controller == null || !controller.hasClients) return;
+    controller.jumpTo(0);
+  }
+
+  @override
   void dispose() {
+    _restartTick?.removeListener(_handleRestart);
     _scrollController?.removeListener(_onScroll);
     _scrollController?.dispose();
     super.dispose();
@@ -230,6 +254,7 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
             enableAudio: leaf.enableAudio,
             allowFullScreenLandscape: leaf.allowFullScreenLandscape,
             showVideoControls: leaf.showVideoControls,
+            showRewatchButton: leaf.showRewatchButton,
             looping: leaf.looping,
             autoPlay: leaf.autoPlay,
           ),
@@ -252,6 +277,7 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
             enableAudio: leaf.enableAudio,
             allowFullScreenLandscape: leaf.allowFullScreenLandscape,
             showVideoControls: leaf.showVideoControls,
+            showRewatchButton: leaf.showRewatchButton,
             looping: leaf.looping,
             autoPlay: leaf.autoPlay,
           ),
