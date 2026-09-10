@@ -603,6 +603,105 @@ void main() {
       expect(find.text('Page Two'), findsOneWidget);
     });
   });
+  group('progress bar', () {
+    // Three pages puts the middle page at an exact half, so the fraction is
+    // checkable without tolerance.
+    List<TutorialPage> threePages() => [
+      TutorialPage(textLeaf('Page One')),
+      TutorialPage(textLeaf('Page Two')),
+      TutorialPage(textLeaf('Page Three')),
+    ];
+
+    /// Clears the 400ms page transition without settling — `pumpAndSettle`
+    /// deadlocks on the forever-repeating amoeba background.
+    ///
+    /// The bare pump first is load-bearing: `animateToPage` needs one frame to
+    /// register the animation before the clock is advanced past it.
+    ///
+    /// The trailing second drains the incoming page's entry animation: those
+    /// use `flutter_animate` delays backed by real timers, and a timer still
+    /// pending when the tree is torn down fails the test.
+    Future<void> settlePage(WidgetTester tester) async {
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(seconds: 1));
+    }
+
+    double fillFraction(WidgetTester tester) {
+      final box = tester.widget<FractionallySizedBox>(
+        find.byKey(progressBarFillKey),
+      );
+      return box.widthFactor!;
+    }
+
+    testWidgets('shown by default, empty on the first page', (tester) async {
+      await pumpEngine(
+        tester,
+        TutorialBook(pages: threePages(), showWelcomeScreen: false),
+      );
+
+      expect(find.byKey(progressBarFillKey), findsOneWidget);
+      expect(fillFraction(tester), 0.0);
+    });
+
+    testWidgets('fills as the book advances', (tester) async {
+      await pumpEngine(
+        tester,
+        TutorialBook(pages: threePages(), showWelcomeScreen: false),
+      );
+
+      await tester.tap(find.byIcon(Icons.arrow_forward_ios));
+      await settlePage(tester);
+
+      expect(find.text('Page Two'), findsOneWidget);
+      expect(fillFraction(tester), 0.5);
+    });
+
+    testWidgets('full on the last page', (tester) async {
+      await pumpEngine(
+        tester,
+        TutorialBook(pages: threePages(), showWelcomeScreen: false),
+      );
+
+      await tester.tap(find.byIcon(Icons.arrow_forward_ios));
+      await settlePage(tester);
+      await tester.tap(find.byIcon(Icons.arrow_forward_ios));
+      await settlePage(tester);
+
+      expect(find.text('Page Three'), findsOneWidget);
+      expect(fillFraction(tester), 1.0);
+    });
+
+    // The flag is opt-OUT, so the default case above would still pass with the
+    // wiring deleted. This is the assertion that pins it.
+    testWidgets('showProgressBar: false hides the bar', (tester) async {
+      await pumpEngine(
+        tester,
+        TutorialBook(
+          pages: threePages(),
+          showWelcomeScreen: false,
+          showProgressBar: false,
+        ),
+      );
+
+      expect(find.byKey(progressBarFillKey), findsNothing);
+    });
+
+    // A single page makes the page count minus one zero, which is the divide
+    // the fraction has to dodge.
+    testWidgets('a one-page book reads as complete, not NaN', (tester) async {
+      await pumpEngine(
+        tester,
+        TutorialBook(
+          pages: [TutorialPage(textLeaf('Only Page'))],
+          showWelcomeScreen: false,
+        ),
+      );
+
+      expect(fillFraction(tester), 1.0);
+    });
+  });
+
   group('restart button', () {
     List<TutorialPage> twoPages() => [
       TutorialPage(textLeaf('Page One')),

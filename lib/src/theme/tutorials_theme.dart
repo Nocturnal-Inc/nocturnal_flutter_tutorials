@@ -165,6 +165,11 @@ class TutorialsTheme {
   static const double pagePadding = 24.0;
   static const double dotSize = 8.0;
   static const double dotSpacing = 10.0;
+
+  /// The bottom progress line. Deliberately thinner than [dotSize] so it reads
+  /// as a rule at the screen edge rather than a second indicator competing
+  /// with the dots directly above it.
+  static const double progressBarHeight = 3.0;
   static const double buttonBorderRadius = 30.0;
   static const double cardBorderRadius = 16.0;
   static const double placeholderIconSize = 80.0;

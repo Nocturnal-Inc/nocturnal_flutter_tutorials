@@ -4,6 +4,40 @@
 
 ### Added
 
+- **A bottom progress bar, on by default.** `TutorialBook` gains
+  `showProgressBar`, a thin line pinned to the bottom edge that fills as the
+  reader moves through the book.
+
+  The dot indicator already showed *where* you are, but it uses a scrolling
+  effect: past a handful of pages the dots slide and compress, so it stops
+  answering *how much is left*. The bar answers that at a glance without
+  loading more meaning onto the dots.
+
+  It defaults to `true`, so like `showNavigationArrows` it is opt-OUT and
+  existing apps gain it with no code change; pass `showProgressBar: false` to
+  restore the previous bottom bar exactly.
+
+  The fill fraction is `page / (pageCount - 1)`, so the bar is empty on the
+  first page and full on the last. The alternative, `(page + 1) / pageCount`,
+  never empties and so never reads as "at the beginning" — it starts a
+  three-page book already a third full. A single-page book would divide by
+  zero, and is special-cased to full.
+
+  It is driven by an `AnimatedBuilder` on the `PageController` rather than by
+  the settled page index, which is what makes it track a swipe continuously
+  instead of snapping when the page settles. `PageController.page` is null
+  before the view has pixels and content dimensions, so the settled index is
+  the fallback on those early frames.
+
+  It is drawn with a `FractionallySizedBox` rather than
+  `LinearProgressIndicator`: the Material widget carries a minimum height, an
+  indeterminate code path, and in recent Flutter versions a stop indicator and
+  track gap, all of which have to be switched off to get a plain rule. It sits
+  outside the bottom indicator row because that row insets itself horizontally
+  when the arrows are on, which would leave the line short of both edges. It
+  stays inside the existing `SafeArea`, so on a notched phone it lands above
+  the home indicator.
+
 - **A rewatch button on videos.** `LeafPage` gains `showRewatchButton`
   (default `true`), drawn as a small replay circle in the video's top-right
   corner.

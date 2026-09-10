@@ -58,6 +58,11 @@ class TutorialBook extends StatelessWidget {
   /// Defaults to `true` — set `false` to rely on swiping alone.
   final bool showNavigationArrows;
 
+  /// Whether to show a thin progress line pinned to the bottom edge.
+  /// Defaults to `true` — set `false` for a book that shows position with the
+  /// dot indicator alone.
+  final bool showProgressBar;
+
   /// Label for the finish button shown on the last page.
   final String finishLabel;
 
@@ -90,6 +95,7 @@ class TutorialBook extends StatelessWidget {
     this.enableDragToScrub = false,
     this.showSectionLabel = false,
     this.showNavigationArrows = true,
+    this.showProgressBar = true,
     this.finishLabel = 'Finish',
     this.onComplete,
     this.onSkip,
@@ -104,6 +110,7 @@ class TutorialBook extends StatelessWidget {
         enableDragToScrub: enableDragToScrub,
         showSectionLabel: showSectionLabel,
         showNavigationArrows: showNavigationArrows,
+        showProgressBar: showProgressBar,
         finishLabel: finishLabel,
         onComplete: onComplete,
         onSkip: onSkip,
@@ -122,6 +129,7 @@ class TutorialBook extends StatelessWidget {
         enableDragToScrub: enableDragToScrub,
         showSectionLabel: showSectionLabel,
         showNavigationArrows: showNavigationArrows,
+        showProgressBar: showProgressBar,
         finishLabel: finishLabel,
         onComplete: onComplete,
         onSkip: onSkip,
@@ -245,6 +253,14 @@ class _TutorialBookWelcomeScreen extends StatelessWidget {
 // Private: Tutorial Screen
 // ─────────────────────────────────────────────────────────────────────────────
 
+/// Identifies the filled portion of the bottom progress bar.
+///
+/// Keyed rather than found by type: `FractionallySizedBox` is a common enough
+/// widget that a bare type finder in a test could match something Material
+/// builds internally.
+@visibleForTesting
+const Key progressBarFillKey = ValueKey('tutorialProgressBarFill');
+
 /// Internal type to unify section-based entries and flat page entries.
 sealed class _PageEntry {
   const _PageEntry();
@@ -267,6 +283,7 @@ class _TutorialBookScreen extends StatefulWidget {
   final bool enableDragToScrub;
   final bool showSectionLabel;
   final bool showNavigationArrows;
+  final bool showProgressBar;
   final String finishLabel;
   final VoidCallback? onComplete;
   final VoidCallback? onSkip;
@@ -277,6 +294,7 @@ class _TutorialBookScreen extends StatefulWidget {
     required this.enableDragToScrub,
     required this.showSectionLabel,
     required this.showNavigationArrows,
+    required this.showProgressBar,
     required this.finishLabel,
     required this.onComplete,
     required this.onSkip,
@@ -430,6 +448,7 @@ class _TutorialBookScreenState extends State<_TutorialBookScreen> {
                   ),
               ],
               _buildBottomIndicator(),
+              if (widget.showProgressBar) _buildProgressBar(),
             ],
           ),
         ),
@@ -478,6 +497,51 @@ class _TutorialBookScreenState extends State<_TutorialBookScreen> {
           const SizedBox(width: 48),
         ],
       ),
+    );
+  }
+
+  /// A thin fill line at the very bottom of the screen.
+  ///
+  /// Driven straight off the controller rather than [_currentPage], so the fill
+  /// tracks the swipe under the finger instead of snapping when the page
+  /// settles. [PageController.page] is null until the view has pixels and
+  /// content dimensions, so the settled page is the fallback for those frames.
+  ///
+  /// It sits outside [_buildBottomIndicator] because that method insets itself
+  /// horizontally when the arrows are on, which would leave the line floating
+  /// short of both screen edges.
+  Widget _buildProgressBar() {
+    return AnimatedBuilder(
+      animation: _pageController,
+      builder: (context, _) {
+        final page = _pageController.hasClients
+            ? (_pageController.page ?? _currentPage.toDouble())
+            : _currentPage.toDouble();
+
+        // A one-page book has no distance to travel; show it complete rather
+        // than dividing by zero.
+        final fraction = _totalPages <= 1
+            ? 1.0
+            : (page / (_totalPages - 1)).clamp(0.0, 1.0);
+
+        return SizedBox(
+          height: TutorialsTheme.progressBarHeight,
+          width: double.infinity,
+          child: DecoratedBox(
+            decoration: const BoxDecoration(
+              color: TutorialsTheme.dotInactiveColor,
+            ),
+            child: FractionallySizedBox(
+              key: progressBarFillKey,
+              alignment: Alignment.centerLeft,
+              widthFactor: fraction,
+              child: const DecoratedBox(
+                decoration: BoxDecoration(color: TutorialsTheme.dotActiveColor),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 

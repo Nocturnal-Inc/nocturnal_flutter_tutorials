@@ -120,6 +120,15 @@ render at the screen level, so section covers get them as well as content pages.
 At the ends of the book the unavailable arrow becomes an equal-width spacer
 rather than disappearing, which keeps the dots centred as you page through.
 
+`TutorialBook.showProgressBar` draws a thin line across the bottom edge of the
+screen, filling from left to right as the book is read. It defaults to **true**,
+so like `showNavigationArrows` it is opt-OUT: set it `false` for a book that
+should signal position with the dot indicator alone. The fill is driven off the
+scroll offset rather than the settled page, so it moves under the finger during
+a swipe instead of jumping once the page lands. It sits below the dot indicator
+and spans the full width, and reads empty on the first page and full on the
+last — a one-page book shows it full.
+
 `GroupPage.children` is typed `List<LeafPage>`: a section cannot contain another
 section. That's deliberate — the flattener previously downcast and crashed at
 runtime on nested groups.
