@@ -322,12 +322,18 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
             if (i > 0) const SizedBox(height: 28),
             switch (points[i]) {
               final InstructionPoint point => _buildPoint(point),
-              BulletPoints(:final bullets) => _buildBullets(bullets),
+              BulletPoints(:final bullets, :final ordered) => _buildBullets(
+                bullets,
+                ordered: ordered,
+              ),
             },
           ],
         ],
       ),
-      BulletPoints(:final bullets) => _buildBullets(bullets),
+      BulletPoints(:final bullets, :final ordered) => _buildBullets(
+        bullets,
+        ordered: ordered,
+      ),
     };
   }
 
@@ -368,7 +374,9 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
   }
 
   /// Shared by standalone and nested bullet lists; 12px apart, tighter than the 28px between items.
-  Widget _buildBullets(List<Bullet> bullets) {
+  ///
+  /// [ordered] swaps the dot for "1.", "2.", … where the sequence is the point of the list.
+  Widget _buildBullets(List<Bullet> bullets, {bool ordered = false}) {
     const style = TutorialsTheme.instructionDescriptionStyle;
     return Column(
       children: [
@@ -377,20 +385,30 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Nudges the 6px dot onto the cap-height of the first line (14px text, 1.5 line-height).
-              const Padding(
-                padding: EdgeInsets.only(top: 7),
-                child: SizedBox(
-                  width: 6,
-                  height: 6,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: TutorialsTheme.bulletColor,
-                      shape: BoxShape.circle,
+              if (ordered)
+                // Fixed width, so a two-digit "10." stays aligned under the single digits above it.
+                SizedBox(
+                  width: 22,
+                  child: Text(
+                    "${i + 1}.",
+                    style: style.copyWith(color: TutorialsTheme.bulletColor),
+                  ),
+                )
+              else
+                // Nudges the 6px dot onto the cap-height of the first line (14px text, 1.5 line-height).
+                const Padding(
+                  padding: EdgeInsets.only(top: 7),
+                  child: SizedBox(
+                    width: 6,
+                    height: 6,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: TutorialsTheme.bulletColor,
+                        shape: BoxShape.circle,
+                      ),
                     ),
                   ),
                 ),
-              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Text.rich(

@@ -36,14 +36,18 @@ class DetailedInstructions extends InstructionContent {
 class BulletPoints extends InstructionContent implements InstructionItem {
   final List<Bullet> bullets;
 
-  const BulletPoints({required this.bullets});
+  /// Numbers the items 1..n in place of the dot, for a list whose order carries meaning.
+  /// Defaults to false, so every existing list renders exactly as before.
+  final bool ordered;
+
+  const BulletPoints({required this.bullets, this.ordered = false});
 
   /// Plain bullets: `BulletPoints.text(['a', 'b'])`.
-  BulletPoints.text(List<String> bullets)
+  BulletPoints.text(List<String> bullets, {this.ordered = false})
     : bullets = [for (final b in bullets) Bullet(b)];
 
   /// Bold-label bullets: `{'Green light': 'Optimization has started'}` → "**Green light**: …".
-  BulletPoints.labeled(Map<String, String> bullets)
+  BulletPoints.labeled(Map<String, String> bullets, {this.ordered = false})
     : bullets = [
         for (final e in bullets.entries) Bullet(e.value, label: e.key),
       ];
