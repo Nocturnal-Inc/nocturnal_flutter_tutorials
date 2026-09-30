@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:nocturnal_flutter_tutorials/src/models/instruction_point.dart';
 import 'package:nocturnal_flutter_tutorials/src/models/tutorial_page.dart';
 import 'package:nocturnal_flutter_tutorials/src/theme/tutorials_theme.dart';
+import 'package:nocturnal_flutter_tutorials/src/tutorial_media.dart';
 import 'package:nocturnal_flutter_tutorials/src/widgets/tutorial_restart_scope.dart';
 import 'package:nocturnal_flutter_tutorials/src/widgets/video_player_widget.dart';
 
@@ -199,11 +200,11 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
     if (leaf.imagePath != null) {
       return ClipRRect(
         borderRadius: TutorialsTheme.cardBorderRadiusShape,
-        child: Image.asset(
-          leaf.imagePath!,
+        child: TutorialMediaImage(
+          path: leaf.imagePath!,
           width: double.infinity,
           fit: BoxFit.contain,
-          errorBuilder: (_, __, ___) => _buildPlaceholder(),
+          placeholder: _buildPlaceholder,
         ),
       );
     }
@@ -291,11 +292,11 @@ class _TutorialPageWidgetState extends State<TutorialPageWidget> {
     if (leaf.gifPath != null) {
       return ClipRRect(
         borderRadius: TutorialsTheme.cardBorderRadiusShape,
-        child: Image.asset(
-          leaf.gifPath!,
+        child: TutorialMediaImage(
+          path: leaf.gifPath!,
           width: double.infinity,
           fit: BoxFit.contain,
-          errorBuilder: (_, __, ___) => _buildPlaceholder(),
+          placeholder: _buildPlaceholder,
         ),
       );
     }

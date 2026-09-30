@@ -20,5 +20,9 @@ export 'package:nocturnal_flutter_tutorials/src/widgets/tutorial_book.dart';
 export 'package:nocturnal_flutter_tutorials/src/widgets/amoeba_background.dart';
 export 'package:nocturnal_flutter_tutorials/src/widgets/video_player_widget.dart';
 
+// Media resolution hook — lets the client serve downloaded files instead of bundled assets.
+export 'package:nocturnal_flutter_tutorials/src/tutorial_media.dart'
+    show TutorialMedia, TutorialMediaResolver;
+
 // Default theme (still Nocturnal-branded; parameterized in a later phase).
 export 'package:nocturnal_flutter_tutorials/src/theme/tutorials_theme.dart';

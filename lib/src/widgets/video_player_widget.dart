@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 import 'package:nocturnal_flutter_tutorials/src/theme/tutorials_theme.dart';
+import 'package:nocturnal_flutter_tutorials/src/tutorial_media.dart';
 import 'package:nocturnal_flutter_tutorials/src/widgets/tutorial_restart_scope.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
@@ -59,7 +62,8 @@ class VideoPlayerWidget extends StatefulWidget {
 
 class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
     with WidgetsBindingObserver {
-  late VideoPlayerController _videoPlayerController;
+  // Nullable because the source path resolves asynchronously before the controller exists.
+  VideoPlayerController? _videoPlayerController;
   ChewieController? _chewieController;
   bool _hasError = false;
 
@@ -116,7 +120,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
   Future<void> _handleRewatch() => _rewind(play: true);
 
   Future<void> _rewind({required bool play}) async {
-    if (_hasError || !_videoPlayerController.value.isInitialized) return;
+    final controller = _videoPlayerController;
+    if (_hasError || controller == null || !controller.value.isInitialized) return;
 
     // A controller that has played to the end will not resume: seekTo(zero)
     // reports success and isPlaying flips true, but the platform decoder stays
@@ -127,17 +132,17 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
     //
     // A clip that has NOT finished rewinds fine, so keep the cheap path for it
     // and avoid the rebuild's flash of loading state.
-    final value = _videoPlayerController.value;
+    final value = controller.value;
     final atEnd =
         value.duration > Duration.zero && value.position >= value.duration;
 
     if (!atEnd) {
-      await _videoPlayerController.seekTo(Duration.zero);
+      await controller.seekTo(Duration.zero);
       if (!mounted) return;
       if (play) {
-        await _videoPlayerController.play();
+        await controller.play();
       } else {
-        await _videoPlayerController.pause();
+        await controller.pause();
       }
       return;
     }
@@ -155,6 +160,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
 
     final old = _videoPlayerController;
     final oldChewie = _chewieController;
+    // Cleared so a dispose() during the async re-resolve can't dispose [old] a second time.
+    _videoPlayerController = null;
 
     // Drop the widgets referencing the old controller before disposing it, so
     // no frame is built against a dead texture.
@@ -166,7 +173,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
 
     await oldChewie?.videoPlayerController.pause();
     oldChewie?.dispose();
-    await old.dispose();
+    await old?.dispose();
 
     if (!mounted) {
       _isReinitializing = false;
@@ -201,15 +208,19 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
   /// [autoPlayOverride] lets a rewatch force playback on the fresh controller
   /// even on a page that opted out of autoplay — the viewer asked for it.
   Future<void> _initializePlayer({bool? autoPlayOverride}) async {
-    // The client owns its assets, so the path resolves from the consuming app's
-    // root — no `packages/<name>/` prefixing.
-    _videoPlayerController = VideoPlayerController.asset(widget.videoUrl);
+    final source = await TutorialMedia.resolve(widget.videoUrl);
+    if (!mounted) return;
+    // Asset keys resolve from the consuming app's root — no `packages/<name>/` prefixing.
+    final controller = TutorialMedia.isFilePath(source)
+        ? VideoPlayerController.file(File(source))
+        : VideoPlayerController.asset(source);
+    _videoPlayerController = controller;
 
     try {
-      await _videoPlayerController.initialize();
-      _videoPlayerController.setVolume(widget.enableAudio ? 1.0 : 0.0);
+      await controller.initialize();
+      controller.setVolume(widget.enableAudio ? 1.0 : 0.0);
       _chewieController = ChewieController(
-        videoPlayerController: _videoPlayerController,
+        videoPlayerController: controller,
         autoPlay: autoPlayOverride ?? widget.autoPlay,
         looping: widget.looping,
         aspectRatio: widget.aspectRatio,
@@ -268,7 +279,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     }
     _chewieController?.dispose();
-    _videoPlayerController.dispose();
+    _videoPlayerController?.dispose();
     super.dispose();
   }
 
@@ -278,8 +289,10 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
       return _buildErrorWidget();
     }
 
+    final controller = _videoPlayerController;
     if (_chewieController == null ||
-        !_videoPlayerController.value.isInitialized) {
+        controller == null ||
+        !controller.value.isInitialized) {
       return const ColoredBox(
         color: TutorialsTheme.surfaceColor,
         child: Center(
@@ -297,7 +310,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
         // the time. Chewie's own scrub bar briefly overlays it in this position
         // while the controls are up, then fades back out.
         VideoProgressIndicator(
-          _videoPlayerController,
+          controller,
           allowScrubbing: false,
           padding: EdgeInsets.zero,
           colors: VideoProgressColors(

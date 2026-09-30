@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:nocturnal_flutter_tutorials/src/models/tutorial_page.dart';
 import 'package:nocturnal_flutter_tutorials/src/theme/tutorials_theme.dart';
+import 'package:nocturnal_flutter_tutorials/src/tutorial_media.dart';
 
 /// A full-page widget that displays a section's title and subtitle.
 class SectionCoverPage extends StatelessWidget {
@@ -44,8 +45,8 @@ class SectionCoverPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(
                           TutorialsTheme.cardBorderRadius,
                         ),
-                        child: Image.asset(
-                          group.imagePath!,
+                        child: TutorialMediaImage(
+                          path: group.imagePath!,
                           width: double.infinity,
                           fit: BoxFit.contain,
                         ),
